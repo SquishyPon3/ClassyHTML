@@ -6,6 +6,11 @@ namespace HTML_LibraryTest
     [TestClass]
     public class UnitTest1
     {
+        static string WorkingDir = Environment.CurrentDirectory;
+        static string ProjectDir =
+            Directory.GetParent(WorkingDir).Parent.Parent.Parent.FullName;
+        static string TestOutputDir = ProjectDir + "\\TestResults";
+
         [TestMethod]
         public void CompareElementConstructionMethods()
         {
@@ -50,12 +55,51 @@ namespace HTML_LibraryTest
             body.Append(button2);
 
             string rootSerial = Serializer.Serialize(root);
-            string workingDirectory = Environment.CurrentDirectory;
-            string projectDirectory = 
-                Directory.GetParent(workingDirectory).Parent.Parent.Parent.FullName;
 
-            using (FileStream fs = new FileStream(projectDirectory 
-                + "\\TestResults\\Test.html", FileMode.Create))
+            using (FileStream fs = new FileStream(
+                $"{TestOutputDir}\\Generic.html", FileMode.Create))
+            {
+                using (StreamWriter w = new StreamWriter(fs, Encoding.UTF8))
+                {
+                    w.Write(rootSerial);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void GenerateTableFile()
+        {
+            HTML root = new HTML();
+            Body body = new Body();
+            root.Append(body);
+
+            Table table = new Table(
+                new TableRow
+                (
+                    new TableData(new Text("1")), 
+                    new TableData(new Text("1")), 
+                    new TableData(new Text("1"))
+                ),
+                new TableRow
+                (
+                    new TableData(new Text("2")),
+                    new TableData(new Text("2")),
+                    new TableData(new Text("2"))
+                ),
+                new TableRow
+                (
+                    new TableData(new Text("3")),
+                    new TableData(new Text("3")),
+                    new TableData(new Text("3"))
+                )
+            );
+
+            root.Append(table);
+
+            string rootSerial = Serializer.Serialize(root);
+
+            using (FileStream fs = new FileStream(
+                $"{TestOutputDir}\\Tables.html", FileMode.Create))
             {
                 using (StreamWriter w = new StreamWriter(fs, Encoding.UTF8))
                 {
