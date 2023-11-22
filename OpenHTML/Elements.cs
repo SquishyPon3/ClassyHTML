@@ -2,8 +2,6 @@
 
 namespace ClassyHTML
 {
-
-
     public class Element
     {
         protected virtual string _Name { get; set; } = "DEFAULT_ELEMENT";
@@ -89,12 +87,74 @@ namespace ClassyHTML
         }
     }
 
+    // Tables
+    public class Table : Tag
+    {
+        protected override string _Name { get; set;  } = "table";
+        public Table(params Element[] elements) : base(elements) { }
+    }
+
+    public class Caption : Tag
+    {
+        protected override string _Name { get; set; } = "caption";
+        public Caption(params Element[] elements) : base(elements) { }
+    }
+
+    public class Column : Tag
+    {
+        protected override string _Name { get; set; } = "col";
+        public Column(params Element[] elements) : base(elements) { }
+    }
+
+    public class ColumnGroup : Tag
+    {
+        protected override string _Name { get; set; } = "colgroup";
+        public ColumnGroup(params Element[] elements) : base(elements) { }
+    }
+    public class TableBody : Tag
+    {
+        protected override string _Name { get; set; } = "tbody";
+        public TableBody(params Element[] elements) : base(elements) { }
+    }
+
+    public class TableData : Tag
+    {
+        protected override string _Name { get; set; } = "td";
+        public TableData(params Element[] elements) : base(elements) { }
+    }
+
+    public class TableFoot : Tag
+    {
+        protected override string _Name { get; set; } = "tfoot";
+        public TableFoot(params Element[] elements) : base(elements) { }
+    }
+
+    public class TableHeader : Tag
+    {
+        protected override string _Name { get; set; } = "th";
+        public TableHeader(params Element[] elements) : base(elements) { }
+    }
+
+    public class TableRowHeader : Tag
+    {
+        protected override string _Name { get; set; } = "thead";
+        public TableRowHeader(params Element[] elements) : base(elements) { }
+    }
+
+    public class TableRow: Tag
+    {
+        protected override string _Name { get; set; } = "tr";
+        public TableRow(params Element[] elements) : base(elements) { }
+    }
+
+    // Forms
     public class Button : Tag
     {
         protected override string _Name { get; set; } = "button";
         public Button(params Element[] elements) : base(elements) { }
     }
 
+    // Attributes
     public class Disabled : Attribute
     {
         protected override string _Name { get; set; } = "disabled";
