@@ -1,4 +1,6 @@
 using ClassyHTML;
+using ClassyStyleSheets;
+using System.Drawing;
 using System.Text;
 
 namespace HTML_LibraryTest
@@ -94,9 +96,9 @@ namespace HTML_LibraryTest
                 )
             );
 
-            root.Append(table);
+            body.Append(table);
 
-            string rootSerial = Serializer.Serialize(root);
+            string rootSerial = ClassyHTML.Serializer.Serialize(root);
 
             using (FileStream fs = new FileStream(
                 $"{TestOutputDir}\\Tables.html", FileMode.Create))
@@ -104,6 +106,30 @@ namespace HTML_LibraryTest
                 using (StreamWriter w = new StreamWriter(fs, Encoding.UTF8))
                 {
                     w.Write(rootSerial);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void Test_CSS_Color()
+        {
+            string color = Color.Red.ToKnownColor().ToString().ToLower();
+            Assert.IsTrue(color == "red");
+        }
+
+        public void Generate_CSS()
+        {
+            string css = "";
+
+            using (FileStream fs = new FileStream(
+                $"{TestOutputDir}\\Tables.html", FileMode.Create))
+            {
+                using (StreamWriter w = new StreamWriter(fs, Encoding.UTF8))
+                {
+                    Property[] props = new Property[] { new AccentColor(Color.Red) };
+                    StyleSheet styleSheet = new StyleSheet(props);
+                    ClassyStyleSheets.Serializer.Serialize(styleSheet);
+                    w.Write(css);
                 }
             }
         }
