@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -13,13 +14,24 @@ namespace ClassyStyleSheets
 {
     public class StyleSheet
     {
+        // Turns Element Type names into their HTML written names.  
+        readonly Dictionary<Type, string> elementNames = new Dictionary<Type, string>() {
+            {typeof(TableData), "td"},
+            {typeof(TableRow), "tr"},
+            {typeof(Column), "col"},
+            {typeof(ColumnGroup), "colgroup"}
+        };
+
         public string Selector { get; }
         public Property[] Properties { get; }
 
         // Applies to all HTML elements of specified Element type
         public StyleSheet(Type htmlElement, Property[] properties)
         {
-            Selector = htmlElement.Name.ToLower();
+            if (elementNames.ContainsKey(htmlElement))
+                Selector = elementNames[htmlElement];
+            else
+                Selector = htmlElement.Name.ToLower();
             Properties = properties;
         }
 
@@ -110,19 +122,18 @@ namespace ClassyStyleSheets
         public string Value { get { return _Value; } }
     }
 
-    // Might merge color properties into parent child classes?
-    public class AccentColor : Property
+    public class ColorProperty : Property
     {
-        protected override string _Name { get; set; } = "accent-color";
+        protected override string _Name { get; set; } = "color";
         protected override string _Value { get; set; } = "red";
 
-        public AccentColor(Color value)
+        public ColorProperty(Color value)
         {
             _Value = value.ToKnownColor().ToString().ToLower();
         }
 
         // Might just want to make this r,g,b individual values
-        public AccentColor(RgbColor value)
+        public ColorProperty(RgbColor value)
         {
             if (value is null)
             {
@@ -133,25 +144,68 @@ namespace ClassyStyleSheets
         }
     }
 
-    public class BackgroundColor : Property
+    public class AccentColor : ColorProperty
+    {
+        protected override string _Name { get; set; } = "accent-color";
+        public AccentColor(Color value) : base(value) { }
+        public AccentColor(RgbColor value) : base(value) { }
+    }
+
+    public class BackgroundColor : ColorProperty
     {
         protected override string _Name { get; set; } = "background-color";
-        protected override string _Value { get; set; } = "red";
+        public BackgroundColor(Color value) : base(value) { }
+        public BackgroundColor(RgbColor value) : base(value) { }
+    }
 
-        public BackgroundColor(Color value)
+    public class BorderWidth : Property
+    {
+        protected override string _Name { get; set; } = "border-width";
+        protected override string _Value { get; set; } = "";
+        public BorderWidth(int pixelWidth)
         {
-            _Value = value.ToKnownColor().ToString().ToLower();
+            _Value = $"{pixelWidth}px";
         }
+    }
 
-        // Might just want to make this r,g,b individual values
-        public BackgroundColor(RgbColor value)
+    public class BorderStyle : Property
+    {
+        protected override string _Name { get; set; } = "border-style";
+        protected override string _Value { get; set; } = "";
+        public enum Style { 
+            dotted, dashed, solid, doubleStyle, groove, 
+            ridge, inset, outset, none, hidden
+        }
+        
+        public BorderStyle(params Style[] borderStyles)
         {
-            if (value is null)
+            foreach (Style style in borderStyles)
             {
-                throw new ArgumentNullException("value");
+                if (style == Style.doubleStyle)
+                {
+                    _Value += "double";
+                    continue;
+                }
+                    
+                _Value += style.ToString();
             }
+        }
+    }
 
-            _Value = $"rgb({value.R}, {value.G}, {value.B})";
+        public class BorderColor : ColorProperty
+    {
+        protected override string _Name { get; set; } = "border-color";
+        public BorderColor(Color value) : base(value) { }
+        public BorderColor(RgbColor value) : base(value) { }
+    }
+
+    public class BorderCollapse : Property
+    {
+        protected override string _Name { get; set; } = "border-collapse";
+        public enum CollapseValue { collapse, separate }
+        public BorderCollapse(CollapseValue collapseValue) : base() 
+        {
+            _Value = collapseValue.ToString(); 
         }
     }
 
