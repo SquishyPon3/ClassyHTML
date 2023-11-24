@@ -193,7 +193,7 @@ namespace ClassyHTML
 
     public class Relationship : Attribute
     {
-        public enum RelationshipValues 
+        public enum RelType 
         { 
             alternate, author, bookmark, 
             external, help, license, next,
@@ -202,7 +202,7 @@ namespace ClassyHTML
         }
         protected override string _Name { get; set; } = "rel";
         protected override string _Value { get; set; } = "";
-        public Relationship(RelationshipValues relationship) 
+        public Relationship(RelType relationship) 
         { 
             _Value = Enum.GetName(relationship);
         }
