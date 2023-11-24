@@ -1,4 +1,7 @@
-﻿using System.Security.Principal;
+﻿using System.ComponentModel;
+using System.Reflection.Metadata.Ecma335;
+using System.Security.Principal;
+using ClassyHTML;
 
 namespace ClassyHTML
 {
@@ -188,7 +191,25 @@ namespace ClassyHTML
 
     public class InternetMediaType : Attribute
     {
-        
+        public enum Application 
+        { 
+            generic, pdf, zip, 
+            pkcs8, octet_stream 
+        }
+        public enum Audio { generic }
+        public enum Example { generic }
+        public enum Font { generic }
+        public enum Image { generic, apng, avif, gif, jpeg, png, svgxml }
+        public enum Model { generic }
+
+        public enum Text { generic, plain, css, html, javascript }
+        public enum Video { generic }
+
+        public InternetMediaType(Application applicationSubType)
+        {
+            if (applicationSubType == Application.octet_stream)
+                _Name = $"application/{applicationSubType.ToString().ToLower()}";
+        }
     }
 
     public class Serializer
