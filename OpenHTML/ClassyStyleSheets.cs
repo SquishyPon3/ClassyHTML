@@ -87,14 +87,14 @@ namespace ClassyStyleSheets
             set { _color[2] = Math.Clamp(value, 0, 255); }
         }
 
-        RgbColor(Color color)
+        public RgbColor(Color color)
         {
             _color[0] = color.R;
             _color[1] = color.G;
             _color[2] = color.B;
         }
 
-        RgbColor(int r, int g, int b)
+        public RgbColor(int r, int g, int b)
         {
             _color[0] = r;
             _color[1] = g;
