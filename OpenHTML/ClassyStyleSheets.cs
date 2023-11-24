@@ -17,9 +17,9 @@ namespace ClassyStyleSheets
         public Property[] Properties { get; }
 
         // Applies to all HTML elements of specified Element type
-        public StyleSheet(ClassyHTML.Element element, Property[] properties)
+        public StyleSheet(Type htmlElement, Property[] properties)
         {
-            Selector = element.Name;
+            Selector = htmlElement.Name.ToLower();
             Properties = properties;
         }
 
@@ -38,9 +38,9 @@ namespace ClassyStyleSheets
         }
 
         // Applies to specific elements with specific HTML class
-        public StyleSheet(string className, ClassyHTML.Element element, Property[] properties)
+        public StyleSheet(string className, Type htmlElement, Property[] properties)
         {
-            Selector = $"{element.Name}.{className}";
+            Selector = $"{htmlElement.Name.ToLower()}.{className}";
             Properties = properties;
         }
 
@@ -110,6 +110,7 @@ namespace ClassyStyleSheets
         public string Value { get { return _Value; } }
     }
 
+    // Might merge color properties into parent child classes?
     public class AccentColor : Property
     {
         protected override string _Name { get; set; } = "accent-color";
@@ -122,6 +123,28 @@ namespace ClassyStyleSheets
 
         // Might just want to make this r,g,b individual values
         public AccentColor(RgbColor value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            _Value = $"rgb({value.R}, {value.G}, {value.B})";
+        }
+    }
+
+    public class BackgroundColor : Property
+    {
+        protected override string _Name { get; set; } = "background-color";
+        protected override string _Value { get; set; } = "red";
+
+        public BackgroundColor(Color value)
+        {
+            _Value = value.ToKnownColor().ToString().ToLower();
+        }
+
+        // Might just want to make this r,g,b individual values
+        public BackgroundColor(RgbColor value)
         {
             if (value is null)
             {
