@@ -52,6 +52,13 @@ namespace ClassyHTML
         public HTML(params Element[] elements) : base(elements) { }
     }
 
+    public class Head : Tag
+    {
+        protected override string _Name { get; set; } = "head";
+        public Head(params Element[] elements) : base(elements) { }
+    }
+
+
     public class Body : Tag
     {
         protected override string _Name { get; set; } = "Body";
@@ -160,6 +167,28 @@ namespace ClassyHTML
         protected override string _Name { get; set; } = "disabled";
         protected override string _Value { get; set; } = "disabled";
         public Disabled() { }
+    }
+
+    public class Relationship : Attribute
+    {
+        public enum RelationshipValues 
+        { 
+            alternate, author, bookmark, 
+            external, help, license, next,
+            nofollow, noopener, noreferrer,
+            prev, search, tag, stylesheet
+        }
+        protected override string _Name { get; set; } = "rel";
+        protected override string _Value { get; set; } = "";
+        public Relationship(RelationshipValues relationship) 
+        { 
+            _Value = Enum.GetName(relationship);
+        }
+    }
+
+    public class InternetMediaType : Attribute
+    {
+        
     }
 
     public class Serializer
