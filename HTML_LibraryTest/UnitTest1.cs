@@ -27,8 +27,8 @@ namespace HTML_LibraryTest
 
             HTML root2 = new HTML(new Body(new P1(new Text("Hello World"))));
 
-            string rootSerial = Serializer.Serialize(root);
-            string rootSerial2 = Serializer.Serialize(root2);
+            string rootSerial = ClassyHTML.Serializer.Serialize(root);
+            string rootSerial2 = ClassyHTML.Serializer.Serialize(root2);
 
             Assert.IsTrue(rootSerial == rootSerial2);            
         }
@@ -56,7 +56,7 @@ namespace HTML_LibraryTest
             body.Append(button);
             body.Append(button2);
 
-            string rootSerial = Serializer.Serialize(root);
+            string rootSerial = ClassyHTML.Serializer.Serialize(root);
 
             using (FileStream fs = new FileStream(
                 $"{TestOutputDir}\\Generic.html", FileMode.Create))
@@ -122,7 +122,7 @@ namespace HTML_LibraryTest
             string css = "";
 
             using (FileStream fs = new FileStream(
-                $"{TestOutputDir}\\Tables.html", FileMode.Create))
+                $"{TestOutputDir}\\Tables.css", FileMode.Create))
             {
                 using (StreamWriter w = new StreamWriter(fs, Encoding.UTF8))
                 {
