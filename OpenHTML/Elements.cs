@@ -75,11 +75,16 @@ namespace ClassyHTML
         public Head(params Element[] elements) : base(elements) { }
     }
 
-
     public class Body : Tag
     {
-        protected override string _Name { get; set; } = "Body";
+        protected override string _Name { get; set; } = "body";
         public Body(params Element[] elements) : base(elements) { }
+    }
+
+    public class Link : Tag
+    {
+        protected override string _Name { get; set; } = "link";
+        public Link(params Attribute[] attributes) : base(attributes) {  }
     }
 
     public class P1 : Tag
@@ -224,6 +229,15 @@ namespace ClassyHTML
         {
             if (applicationSubType == Application.octet_stream)
                 _Name = $"application/{applicationSubType.ToString().ToLower()}";
+        }
+    }
+
+    public class HyperTextReference : Attribute
+    {
+        protected override string _Name { get; set; } = "href";
+        public HyperTextReference(string destination)
+        {
+            _Value = destination;
         }
     }
 
