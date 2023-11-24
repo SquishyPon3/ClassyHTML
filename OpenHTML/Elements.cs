@@ -36,6 +36,20 @@ namespace ClassyHTML
         }
     }
 
+    /// <summary>
+    /// Used as an additional identifer for CSS & code behind.
+    /// Must be unique for each HTML element applied to.
+    /// </summary>
+    public class HTML_ID
+    {
+        public string Value;
+
+        HTML_ID(string name)
+        {
+            Value = $"#{name}";
+        }
+    }
+
     public class Tag : Element
     {
         protected override string _Name { get; set; } = "HTML";
@@ -191,6 +205,7 @@ namespace ClassyHTML
 
     public class InternetMediaType : Attribute
     {
+        // Needs a lot of work on full implementation.
         public enum Application 
         { 
             generic, pdf, zip, 

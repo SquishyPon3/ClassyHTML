@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using ClassyHTML;
 
 namespace ClassyStyleSheets
 {
@@ -15,30 +16,35 @@ namespace ClassyStyleSheets
         public string Selector { get; }
         public Property[] Properties { get; }
 
+        // Applies to all HTML elements of specified Element type
         public StyleSheet(ClassyHTML.Element element, Property[] properties)
         {
             Selector = element.Name;
             Properties = properties;
         }
 
-        public StyleSheet(string id, Property[] properties)
+        // Applies to HTML element with specified ID
+        public StyleSheet(HTML_ID id, Property[] properties)
         {
-            Selector = $"#{id}";
+            Selector = id.Value;
             Properties = properties;
         }
 
-        public StyleSheet(Type classType, Property[] properties)
+        // Applies to HTML with specific class applied
+        public StyleSheet(string className, Property[] properties)
         {
-            Selector = $".{classType.Name}";
+            Selector = $".{className}";
             Properties = properties;
         }
 
-        public StyleSheet(Type classType, ClassyHTML.Element element, Property[] properties)
+        // Applies to specific elements with specific HTML class
+        public StyleSheet(string className, ClassyHTML.Element element, Property[] properties)
         {
-            Selector = $"{element.Name}.{classType.Name}";
+            Selector = $"{element.Name}.{className}";
             Properties = properties;
         }
 
+        // Applies to every HTML element
         public StyleSheet(Property[] properties)
         {
             Selector = "*";
@@ -48,6 +54,9 @@ namespace ClassyStyleSheets
 
     public class RgbColor
     {
+        // Used as optional replacer for C# color 
+        // Might just get rid of it, but I like that it
+        // sets limits from 0 - 255.
         int[] _color = new int[3] { 255, 255, 255 };
         int[] color
         {
@@ -111,6 +120,7 @@ namespace ClassyStyleSheets
             _Value = value.ToKnownColor().ToString().ToLower();
         }
 
+        // Might just want to make this r,g,b individual values
         public AccentColor(RgbColor value)
         {
             if (value is null)
