@@ -117,6 +117,7 @@ namespace HTML_LibraryTest
             Assert.IsTrue(color == "red");
         }
 
+        [TestMethod]
         public void Generate_CSS()
         {
             string css = "";
@@ -128,7 +129,7 @@ namespace HTML_LibraryTest
                 {
                     Property[] props = new Property[] { new AccentColor(Color.Red) };
                     StyleSheet styleSheet = new StyleSheet(props);
-                    ClassyStyleSheets.Serializer.Serialize(styleSheet);
+                    css = ClassyStyleSheets.Serializer.Serialize(styleSheet);
                     w.Write(css);
                 }
             }
