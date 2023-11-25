@@ -16,21 +16,7 @@ namespace ClassyStyleSheets
     public class StyleSheet
     {
         // Turns Element Type names into their HTML written names.  
-        readonly Dictionary<Type, string> elementNames = new Dictionary<Type, string>() {
-            // Tables
-            {typeof(TableData), "td"},
-            {typeof(TableRow), "tr"},
-            {typeof(Column), "col"},
-            {typeof(ColumnGroup), "colgroup"},
 
-            // Headers
-            {typeof(Heading1), "h1"},
-            {typeof(Heading2), "h2"},
-            {typeof(Heading3), "h3"},
-            {typeof(Heading4), "h4"},
-            {typeof(Heading5), "h5"},
-            {typeof(Heading6), "h6"}
-        };
 
         public string Selector { get; }
         public Property[] Properties { get; }
@@ -38,8 +24,8 @@ namespace ClassyStyleSheets
         // Applies to all HTML elements of specified Element type
         public StyleSheet(Type htmlElement, Property[] properties)
         {
-            if (elementNames.ContainsKey(htmlElement))
-                Selector = elementNames[htmlElement];
+            if (Element.HTML_TypeName.ContainsKey(htmlElement))
+                Selector = Element.HTML_TypeName[htmlElement];
             else
                 Selector = htmlElement.Name.ToLower();
             Properties = properties;
@@ -233,17 +219,18 @@ namespace ClassyStyleSheets
         }
     }
 
-    public class StyleSheetDocument : IDisposable
-    {
-        public static StyleSheetDocument Create(string path)
-        {
-            return new StyleSheetDocument();
-        }
+    // Not implemented
+    // public class StyleSheetDocument : IDisposable
+    // {
+    //     public static StyleSheetDocument Create(string path)
+    //     {
+    //         return new StyleSheetDocument();
+    //     }
 
-        public void Dispose()
-        {
-            // Serializer.Serialize();
-            throw new NotImplementedException();
-        }
-    }
+    //     public void Dispose()
+    //     {
+    //         // Serializer.Serialize();
+    //         throw new NotImplementedException();
+    //     }
+    // }
 }

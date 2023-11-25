@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Principal;
 using ClassyHTML;
@@ -7,6 +7,27 @@ namespace ClassyHTML
 {
     public class Element
     {
+        // Some of the Element names used do not match their
+        // HTML element shorthand names. This dict allows translation
+        // to shorthand names for parsing.
+        public static readonly Dictionary<Type, string> HTML_TypeName 
+            = new Dictionary<Type, string>() 
+        {
+            // Tables
+            {typeof(TableData), "td"},
+            {typeof(TableRow), "tr"},
+            {typeof(Column), "col"},
+            {typeof(ColumnGroup), "colgroup"},
+
+            // Headings
+            {typeof(Heading1), "h1"},
+            {typeof(Heading2), "h2"},
+            {typeof(Heading3), "h3"},
+            {typeof(Heading4), "h4"},
+            {typeof(Heading5), "h5"},
+            {typeof(Heading6), "h6"}
+        };
+
         protected virtual string _Name { get; set; } = "DEFAULT_ELEMENT";
         public string Name { get { return _Name; } }
         private Element[] _Children = { };
@@ -229,7 +250,6 @@ namespace ClassyHTML
 
     public class InternetMediaType : Attribute
     {
-        // Needs a lot of work on full implementation.
         public enum Application 
         { 
             generic, pdf, zip, 
@@ -313,6 +333,11 @@ namespace ClassyHTML
         {
             _Value = destination;
         }
+
+        // I want to make this work, to reference a stylesheet document directly
+        // and have it reference the file path on compile, need to 
+        // implement IDisposable 
+        // public HyperTextReference(ClassyStyleSheets.StyleSheet styleSheet) { }
     }
 
     public class Serializer
@@ -356,4 +381,19 @@ namespace ClassyHTML
             return output;
         }
     }
+
+    // Not implemented
+    // public class HTML_Document : IDisposable
+    // {
+    //     public static HTML_Document Create(string path)
+    //     {
+    //         return new HTML_Document();
+    //     }
+
+    //     public void Dispose()
+    //     {
+    //         // Serializer.Serialize();
+    //         throw new NotImplementedException();
+    //     }
+    // }
 }
