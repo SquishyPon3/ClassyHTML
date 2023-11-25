@@ -18,14 +18,14 @@ namespace HTML_LibraryTest
         {
             HTML root = new HTML();
             Body body = new Body();
-            P1 p1 = new P1();
+            Paragraph p = new Paragraph();
             Text text = new Text("Hello World");
 
             root.Append(body);
-            body.Append(p1);
-            p1.Append(text);
+            body.Append(p);
+            p.Append(text);
 
-            HTML root2 = new HTML(new Body(new P1(new Text("Hello World"))));
+            HTML root2 = new HTML(new Body(new Paragraph(new Text("Hello World"))));
 
             string rootSerial = ClassyHTML.Serializer.Serialize(root);
             string rootSerial2 = ClassyHTML.Serializer.Serialize(root2);
@@ -72,27 +72,35 @@ namespace HTML_LibraryTest
         public void GenerateTableFile()
         {
             HTML root = new HTML();
+            Relationship rel = new Relationship(
+                Relationship.RelType.stylesheet);
+            HyperTextReference href = new HyperTextReference($"{TestOutputDir}\\Tables.css");
+            Link link = new Link(rel, href);
+            Head head = new Head(link);
             Body body = new Body();
+            root.Append(head);
             root.Append(body);
+
+            body.Append(new Heading1(new Text("Example Table")));
 
             Table table = new Table(
                 new TableRow
                 (
-                    new TableData(new Text("1")), 
-                    new TableData(new Text("1")), 
-                    new TableData(new Text("1"))
+                    new TableData(new Text("ExampleData_1_1")), 
+                    new TableData(new Text("ExampleData_1_2")), 
+                    new TableData(new Text("ExampleData_1_3"))
                 ),
                 new TableRow
                 (
-                    new TableData(new Text("2")),
-                    new TableData(new Text("2")),
-                    new TableData(new Text("2"))
+                    new TableData(new Text("ExampleData_2_1")),
+                    new TableData(new Text("ExampleData_2_2")),
+                    new TableData(new Text("ExampleData_2_2"))
                 ),
                 new TableRow
                 (
-                    new TableData(new Text("3")),
-                    new TableData(new Text("3")),
-                    new TableData(new Text("3"))
+                    new TableData(new Text("ExampleData_3_1")),
+                    new TableData(new Text("ExampleData_3_2")),
+                    new TableData(new Text("ExampleData_3_3"))
                 )
             );
 
@@ -120,17 +128,37 @@ namespace HTML_LibraryTest
         [TestMethod]
         public void Generate_CSS()
         {
-            string css = "";
+            string css;
+            string cellcss;
 
             using (FileStream fs = new FileStream(
                 $"{TestOutputDir}\\Tables.css", FileMode.Create))
             {
                 using (StreamWriter w = new StreamWriter(fs, Encoding.UTF8))
                 {
-                    Property[] props = new Property[] { new AccentColor(Color.Red) };
-                    StyleSheet styleSheet = new StyleSheet(props);
+                    Property[] borderProps = new Property[] 
+                    {
+                        new BorderStyle(BorderStyle.Style.solid),
+                        new BorderWidth(3),
+                        new BorderColor(Color.Black),
+                        new BorderCollapse(
+                            BorderCollapse.CollapseValue.collapse)
+                    };
+                    Property[] props = new Property[] { 
+                        new BackgroundColor(Color.LightGray),
+                        new BorderStyle(BorderStyle.Style.solid),
+                        new BorderWidth(3),
+                        new BorderColor(Color.Black),
+                        new BorderCollapse(
+                            BorderCollapse.CollapseValue.collapse)
+                    };
+                    StyleSheet styleSheet = new StyleSheet(
+                        typeof(Table), props);
+                    StyleSheet cellSheet = new StyleSheet(
+                        typeof(TableData), borderProps);
                     css = ClassyStyleSheets.Serializer.Serialize(styleSheet);
-                    w.Write(css);
+                    cellcss = ClassyStyleSheets.Serializer.Serialize(cellSheet);
+                    w.Write(css + "\n" + cellcss);
                 }
             }
         }
