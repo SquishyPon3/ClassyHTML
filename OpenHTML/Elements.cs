@@ -87,22 +87,41 @@ namespace ClassyHTML
         public Link(params Attribute[] attributes) : base(attributes) {  }
     }
 
-    public class P1 : Tag
+    public class Paragraph : Tag
     {
-        protected override string _Name { get; set; } = "p1";
-        public P1(params Element[] elements) : base(elements) { }
+        protected override string _Name { get; set; } = "p";
+        public Paragraph(params Element[] elements) : base(elements) { }
     }
 
-    public class P2 : Tag
+    public class Heading1 : Tag 
     {
-        protected override string _Name { get; set; } = "p2";
-        public P2(params Element[] elements) : base(elements) { }
+        protected override string _Name { get; set; } = "h1";
+        public Heading1(params Element[] elements) : base(elements) { }
     }
-
-    public class P3 : Tag
+    public class Heading2 : Tag 
     {
-        protected override string _Name { get; set; } = "p3";
-        public P3(params Element[] elements) : base(elements) { }
+        protected override string _Name { get; set; } = "h2";
+        public Heading2(params Element[] elements) : base(elements) { }
+    }
+    public class Heading3 : Tag 
+    {
+        protected override string _Name { get; set; } = "h3";
+        public Heading3(params Element[] elements) : base(elements) { }
+    }
+    public class Heading4 : Tag 
+    {
+        protected override string _Name { get; set; } = "h4";
+        public Heading4(params Element[] elements) : base(elements) { }
+    }
+    public class Heading5 : Tag 
+    {
+        protected override string _Name { get; set; } = "h5";
+        public Heading5(params Element[] elements) : base(elements) { }
+    }
+    public class Heading6 : Tag 
+    {
+        protected override string _Name { get; set; } = "h6";
+        public Heading6(params Element[] elements) : base(elements) { }
     }
 
     public class Text : Element
