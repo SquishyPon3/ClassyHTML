@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Principal;
 using ClassyHTML;
@@ -44,7 +44,7 @@ namespace ClassyHTML
     {
         public string Value;
 
-        HTML_ID(string name)
+        public HTML_ID(string name)
         {
             Value = $"#{name}";
         }
