@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,10 +17,19 @@ namespace ClassyStyleSheets
     {
         // Turns Element Type names into their HTML written names.  
         readonly Dictionary<Type, string> elementNames = new Dictionary<Type, string>() {
+            // Tables
             {typeof(TableData), "td"},
             {typeof(TableRow), "tr"},
             {typeof(Column), "col"},
-            {typeof(ColumnGroup), "colgroup"}
+            {typeof(ColumnGroup), "colgroup"},
+
+            // Headers
+            {typeof(Heading1), "h1"},
+            {typeof(Heading2), "h2"},
+            {typeof(Heading3), "h3"},
+            {typeof(Heading4), "h4"},
+            {typeof(Heading5), "h5"},
+            {typeof(Heading6), "h6"}
         };
 
         public string Selector { get; }
@@ -192,7 +202,7 @@ namespace ClassyStyleSheets
         }
     }
 
-        public class BorderColor : ColorProperty
+    public class BorderColor : ColorProperty
     {
         protected override string _Name { get; set; } = "border-color";
         public BorderColor(Color value) : base(value) { }
@@ -220,6 +230,20 @@ namespace ClassyStyleSheets
                 props += $"{property.Name}: {property.Value};\n";
             }
             return $"{styleSheet.Selector} {{\n{props}}}";
+        }
+    }
+
+    public class StyleSheetDocument : IDisposable
+    {
+        public static StyleSheetDocument Create(string path)
+        {
+            return new StyleSheetDocument();
+        }
+
+        public void Dispose()
+        {
+            // Serializer.Serialize();
+            throw new NotImplementedException();
         }
     }
 }
