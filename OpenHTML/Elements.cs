@@ -227,8 +227,61 @@ namespace ClassyHTML
 
         public InternetMediaType(Application applicationSubType)
         {
+            if (applicationSubType == Application.generic)
+                _Name = "application";
             if (applicationSubType == Application.octet_stream)
+                _Name = $"application/octet-stream";
+            else 
                 _Name = $"application/{applicationSubType.ToString().ToLower()}";
+        }
+        public InternetMediaType(Audio audioSubType)
+        {
+            if (audioSubType == Audio.generic)
+                _Name = "application";            
+            else 
+                _Name = $"application/{audioSubType.ToString().ToLower()}";
+        }
+        public InternetMediaType(Example exampleSubType)
+        {
+            if (exampleSubType == Example.generic)
+                _Name = "application";            
+            else 
+                _Name = $"application/{exampleSubType.ToString().ToLower()}";
+        }
+        public InternetMediaType(Font fontSubType)
+        {
+            if (fontSubType == Font.generic)
+                _Name = "application";            
+            else 
+                _Name = $"application/{fontSubType.ToString().ToLower()}";
+        }
+        public InternetMediaType(Image imageSubType)
+        {
+            if (imageSubType == Image.generic)
+                _Name = "application";            
+            else 
+                _Name = $"application/{imageSubType.ToString().ToLower()}";
+        }
+        public InternetMediaType(Model modelSubType)
+        {
+            if (modelSubType == Model.generic)
+                _Name = "application";            
+            else 
+                _Name = $"application/{modelSubType.ToString().ToLower()}";
+        }
+        public InternetMediaType(Text textSubType)
+        {
+            if (textSubType == Text.generic)
+                _Name = "application";            
+            else 
+                _Name = $"application/{textSubType.ToString().ToLower()}";
+        }
+        public InternetMediaType(Video videoSubType)
+        {
+            if (videoSubType == Video.generic)
+                _Name = "application";            
+            else 
+                _Name = $"application/{videoSubType.ToString().ToLower()}";
         }
     }
 
