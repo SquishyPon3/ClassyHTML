@@ -246,6 +246,8 @@ namespace ClassyHTML
 
         public InternetMediaType(Application applicationSubType)
         {
+            // html likes to use - character in names, need to
+            // specifically check for these specific terms.
             if (applicationSubType == Application.generic)
                 _Name = "application";
             if (applicationSubType == Application.octet_stream)
@@ -256,51 +258,51 @@ namespace ClassyHTML
         public InternetMediaType(Audio audioSubType)
         {
             if (audioSubType == Audio.generic)
-                _Name = "application";            
+                _Name = "audio";            
             else 
-                _Name = $"application/{audioSubType.ToString().ToLower()}";
+                _Name = $"audio/{audioSubType.ToString().ToLower()}";
         }
         public InternetMediaType(Example exampleSubType)
         {
             if (exampleSubType == Example.generic)
-                _Name = "application";            
+                _Name = "example";            
             else 
-                _Name = $"application/{exampleSubType.ToString().ToLower()}";
+                _Name = $"example/{exampleSubType.ToString().ToLower()}";
         }
         public InternetMediaType(Font fontSubType)
         {
             if (fontSubType == Font.generic)
-                _Name = "application";            
+                _Name = "font";            
             else 
-                _Name = $"application/{fontSubType.ToString().ToLower()}";
+                _Name = $"font/{fontSubType.ToString().ToLower()}";
         }
         public InternetMediaType(Image imageSubType)
         {
             if (imageSubType == Image.generic)
-                _Name = "application";            
+                _Name = "image";            
             else 
-                _Name = $"application/{imageSubType.ToString().ToLower()}";
+                _Name = $"image/{imageSubType.ToString().ToLower()}";
         }
         public InternetMediaType(Model modelSubType)
         {
             if (modelSubType == Model.generic)
-                _Name = "application";            
+                _Name = "model";            
             else 
-                _Name = $"application/{modelSubType.ToString().ToLower()}";
+                _Name = $"model/{modelSubType.ToString().ToLower()}";
         }
         public InternetMediaType(Text textSubType)
         {
             if (textSubType == Text.generic)
-                _Name = "application";            
+                _Name = "text";            
             else 
-                _Name = $"application/{textSubType.ToString().ToLower()}";
+                _Name = $"text/{textSubType.ToString().ToLower()}";
         }
         public InternetMediaType(Video videoSubType)
         {
             if (videoSubType == Video.generic)
-                _Name = "application";            
+                _Name = "video";            
             else 
-                _Name = $"application/{videoSubType.ToString().ToLower()}";
+                _Name = $"video/{videoSubType.ToString().ToLower()}";
         }
     }
 
