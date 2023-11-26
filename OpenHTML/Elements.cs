@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Principal;
 using ClassyHTML;
@@ -338,6 +338,44 @@ namespace ClassyHTML
         // and have it reference the file path on compile, need to 
         // implement IDisposable 
         // public HyperTextReference(ClassyStyleSheets.StyleSheet styleSheet) { }
+    }
+
+    public class Source : Attribute
+    {
+        protected override string _Name { get; set; } = "src";
+        public Source(string path)
+        {
+            _Value = path;
+        }
+    }
+
+    public class Width : Attribute
+    {
+        protected override string _Name { get; set; } = "width";
+        public Width(int pixels)
+        {
+            _Value = pixels.ToString();
+        }
+    }
+
+    public class Height : Attribute
+    {
+        protected override string _Name { get; set; } = "height";
+        public Height(int pixels)
+        {
+            _Value = pixels.ToString();
+        }
+    }
+
+    // Alt text is used to define descriptions for users 
+    // who browse with a screen reader.
+    public class AltText : Attribute
+    {
+        protected override string _Name { get; set; } = "alt";
+        public AltText(string description)
+        {
+            _Value = description;
+        }
     }
 
     public class Serializer

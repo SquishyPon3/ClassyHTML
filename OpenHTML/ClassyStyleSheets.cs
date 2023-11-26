@@ -208,14 +208,22 @@ namespace ClassyStyleSheets
     public class Serializer
     {
         public static string Serialize(StyleSheet styleSheet)
+        {            
+            string props = Serialize(styleSheet.Properties);
+            return $"{styleSheet.Selector} {{\n{props}}}";
+        }
+
+        // Serializes array of properties. Useful for the css serialization
+        // process and for adding to HTML Style attributes.
+        public static string Serialize(params Property[] properties)
         {
             string props = "";
-            foreach (Property property in styleSheet.Properties)
+            foreach (Property property in properties)
             {
                 props += "    ";
                 props += $"{property.Name}: {property.Value};\n";
             }
-            return $"{styleSheet.Selector} {{\n{props}}}";
+            return props; 
         }
     }
 
