@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Principal;
 using ClassyHTML;
@@ -375,6 +375,30 @@ namespace ClassyHTML
         public AltText(string description)
         {
             _Value = description;
+        }
+    }
+
+    public class Style : Attribute
+    {
+        protected override string _Name { get; set; } = "style";
+        ClassyStyleSheets.Property[] _properties;
+        public ClassyStyleSheets.Property[] properties 
+        { 
+            get { return _properties; } 
+            set 
+            { 
+                _properties = value; 
+                _Value = ClassyStyleSheets.Serializer.Serialize(value);
+                // TODO: Make this a for loop that checks for these,
+                // just way more efficient than making mult arrays...
+                // Remove spaces and new line character
+                _Value = _Value.Replace(" ", string.Empty);
+                _Value = _Value.Replace("\n", string.Empty);
+            } 
+        }
+        public Style(params ClassyStyleSheets.Property[] props)
+        {
+            properties = props;
         }
     }
 
