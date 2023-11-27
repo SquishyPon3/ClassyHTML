@@ -162,5 +162,42 @@ namespace HTML_LibraryTest
                 }
             }
         }
+
+        [TestMethod]
+        public void HTML_DisplayEveryElement()
+        {
+            HTML root = new HTML();
+
+            Head head = new Head();
+            Body body = new Body();
+            root.Append(head, body);
+
+            Paragraph para = new Paragraph(
+                new Style(
+                    new BackgroundColor(Color.LightPink),
+                    new ColorProperty(Color.White)
+                ),
+                new Text("Hello World"));            
+
+            Heading1 h1 = new Heading1(new Text("Heading 1"));
+            Heading2 h2 = new Heading2(new Text("Heading 2"));
+            Heading3 h3 = new Heading3(new Text("Heading 3"));
+            Heading4 h4 = new Heading4(new Text("Heading 4"));
+            Heading5 h5 = new Heading5(new Text("Heading 5"));
+            Heading6 h6 = new Heading6(new Text("Heading 6"));
+            
+            body.Append(para,h1,h2,h3,h4,h5,h6);
+
+            string rootSerial = ClassyHTML.Serializer.Serialize(root);
+
+            using (FileStream fs = new FileStream(
+                $"{TestOutputDir}\\ElementZoo.html", FileMode.Create))
+            {
+                using (StreamWriter w = new StreamWriter(fs, Encoding.UTF8))
+                {
+                    w.Write(rootSerial);
+                }
+            }
+        }
     }
 }
