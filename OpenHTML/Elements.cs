@@ -40,6 +40,8 @@ namespace ClassyHTML
 
         public Element[] Append(params Element[] elements)
         {
+            elements = elements.Where(element => element != null).ToArray();
+
             Element[] children = new Element[_Children.Length + elements.Length];
 
             for (int i = 0; i < _Children.Length; i++)
@@ -145,6 +147,7 @@ namespace ClassyHTML
         public Heading6(params Element[] elements) : base(elements) { }
     }
 
+    // Content
     public class Text : Element
     {
         protected override string _Name { get; set; } = "";
@@ -154,6 +157,18 @@ namespace ClassyHTML
         {
             _Value = value;
         }
+    }
+
+    public class Image : Element
+    {
+        protected override string _Name { get; set; } = "img";
+        // Realized I can enforce specific child types through the 
+        // constructor like this, need better way to handle the null
+        // refs though, currently handling in the append func but the
+        // compiler is unhappy.
+        public Image(Source source, AltText? altText = null,
+            Width? width = null, Height? height = null) 
+                : base(source, altText, width, height) { }
     }
 
     // Tables

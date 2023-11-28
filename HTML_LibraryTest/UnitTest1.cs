@@ -1,5 +1,6 @@
 using ClassyHTML;
 using ClassyStyleSheets;
+using System.Buffers;
 using System.Drawing;
 using System.Text;
 
@@ -187,6 +188,11 @@ namespace HTML_LibraryTest
             Heading6 h6 = new Heading6(new Text("Heading 6"));
             
             body.Append(para,h1,h2,h3,h4,h5,h6);
+
+            Image image = new Image(new Source($"{ProjectDir}\\OpenHTML\\image.png"),
+                new AltText("Test image!"), new Width(256), new Height(256));
+
+            body.Append(image);
 
             string rootSerial = ClassyHTML.Serializer.Serialize(root);
 
