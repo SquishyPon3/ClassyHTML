@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel;
+using System.Numerics;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Principal;
 using ClassyHTML;
 
 namespace ClassyHTML
 {
-    public class Element
+    public abstract class Element
     {
         // Some of the Element names used do not match their
         // HTML element shorthand names. This dict allows translation
@@ -33,13 +34,19 @@ namespace ClassyHTML
         private Element[] _Children = { };
         public Element[] Children { get { return _Children; } }
 
-        public Element(params Element[] elements)
+        public Element() {}
+        public Element(params Element[]? elements)
         {
             Append(elements);
         }
 
-        public Element[] Append(params Element[] elements)
+        public Element[] Append(params Element[]? elements)
         {
+            if (elements is null)
+            {
+                throw new WarningException("Cannot append empty element array.");
+            }                
+
             elements = elements.Where(element => element != null).ToArray();
 
             Element[] children = new Element[_Children.Length + elements.Length];
@@ -57,6 +64,12 @@ namespace ClassyHTML
 
             return _Children;
         }
+
+        public Element Append(Element element)
+        {
+            Append(new Element[] {element});
+            return element;
+        }
     }
 
     /// <summary>
@@ -73,15 +86,15 @@ namespace ClassyHTML
         }
     }
 
-    public class Tag : Element
+    public abstract class Tag : Element
     {
         protected override string _Name { get; set; } = "HTML";
         public Tag(params Element[] elements) : base(elements) { }
     }
 
-    public class Attribute : Element
+    public abstract class Attribute : Element
     {
-        protected virtual string _Value { get; set; } = "value";
+        protected virtual string _Value { get; set; } = "default_value";
         public string Value { get { return _Value; } }
         public Attribute(params Element[] elements) : base(elements) { }
     }
@@ -159,6 +172,7 @@ namespace ClassyHTML
         }
     }
 
+    // Images
     public class Image : Element
     {
         protected override string _Name { get; set; } = "img";
@@ -167,8 +181,45 @@ namespace ClassyHTML
         // refs though, currently handling in the append func but the
         // compiler is unhappy.
         public Image(Source source, AltText? altText = null,
-            Width? width = null, Height? height = null) 
-                : base(source, altText, width, height) { }
+            Width? width = null, Height? height = null, UseMap? useMap = null) 
+                : base(source, altText, width, height, useMap) { }
+    }
+
+    public class Map : Element
+    {
+        protected override string _Name { get; set; } = "map";
+        public Name mapName;
+        public Map(string name, params Area[] areas) : base()
+        {
+            mapName = new Name(name);
+            Append(mapName);
+            Append(areas);
+        }
+        public Map(Name name, params Area[] areas) : base()
+        { 
+            mapName = name;
+            Append(mapName);
+            Append(areas);
+        }
+    }
+
+    public class Area : Element
+    {
+        protected override string _Name { get; set; } = "area";
+        // Defines a "Default" shape Area. Entire area is clickable.
+        public Area(HyperTextReference href) : base(new DefaultShape(), href) { }
+        public Area(Rectange rect, RectangeCoordinates coordinates, HyperTextReference href) 
+            : base(rect,coordinates,href) { }
+        public Area(Circle circle, CircleCoordinates coordinates, HyperTextReference href) 
+            : base(circle,coordinates,href) { }
+        public Area(Polygon poly, PolygonCoordinates coordinates, HyperTextReference href) 
+            : base(poly,coordinates,href) { }
+    }
+
+    public class Picture : Element
+    {
+        protected override string _Name { get; set; } = "picture";
+        public Picture() : base() { throw new NotImplementedException(); }
     }
 
     // Tables
@@ -239,6 +290,12 @@ namespace ClassyHTML
     }
 
     // Attributes
+    public class Name : Attribute
+    {
+        protected override string _Name { get; set; } = "name";
+        public Name(string name) { _Value = name; }
+    }
+
     public class Disabled : Attribute
     {
         protected override string _Name { get; set; } = "disabled";
@@ -259,7 +316,11 @@ namespace ClassyHTML
         protected override string _Value { get; set; } = "";
         public Relationship(RelType relationship) 
         { 
-            _Value = Enum.GetName(relationship);
+            string? name = Enum.GetName(relationship);
+            if (name == null)
+                throw new Exception("RelType parameter relationship did" + 
+                    "not provide a proper RelType Enum value.");
+            _Value = name;
         }
     }
 
@@ -393,6 +454,73 @@ namespace ClassyHTML
         }
     }
 
+    public class UseMap : Attribute
+    {
+        protected override string _Name { get; set; } = "usemap";
+        public UseMap(string mapName)
+        {
+            _Value = $"#{mapName}";
+        }
+    } 
+
+    // Various Shape types
+    public abstract class Shape : Attribute { public Shape() { _Name = "shape"; } }
+    public class DefaultShape : Shape
+    {
+        public DefaultShape(): base() { _Value = "default"; }
+    }
+    public class Rectange : Shape 
+    {
+        public Rectange(): base() { _Value = "rect"; }
+    } 
+    public class Circle : Shape 
+    {
+        public Circle(): base() { _Value = "circle"; }
+    } 
+    public class Polygon : Shape 
+    {
+        public Polygon(): base() { _Value = "poly"; }
+    } 
+
+    public abstract class Coordinates : Attribute 
+    { 
+        public Coordinates(params int[] components)
+        {            
+            _Name = "coords";
+            _Value = "";
+            foreach (int coordinate in components)
+            {
+                _Value += $"{coordinate},";
+            }
+        }
+        public Coordinates(params Vector2Int[] coordinates)
+        {
+            _Name = "coords";
+            _Value = "";
+            foreach (Vector2Int position in coordinates)
+            {
+                _Value += $"{position.X},{position.Y},";
+            }
+        }
+    }
+
+    public class RectangeCoordinates : Coordinates
+    {
+        public RectangeCoordinates(Vector2Int topLeft, Vector2Int bottomRight) 
+            : base(topLeft.X, topLeft.Y, bottomRight.X, bottomRight.Y) { }
+    }
+    public class CircleCoordinates : Coordinates
+    {
+        public CircleCoordinates(int X, int Y, int radius) 
+            : base(X, Y, radius) { }
+    }
+    public class PolygonCoordinates : Coordinates
+    {
+        public PolygonCoordinates(params Vector2Int[] coordinates)
+            : base(coordinates) { }
+    }
+
+    // CSS
     public class Style : Attribute
     {
         protected override string _Name { get; set; } = "style";
@@ -456,6 +584,18 @@ namespace ClassyHTML
             string output = $"{tabs}<{head}{attributes}>{elements}\n{tabs}</{end}>";
 
             return output;
+        }
+    }
+
+    // Abstracts out x/y coordinates for use in some
+    // elements which take specific pixel positions.
+    public class Vector2Int
+    {
+        public int X, Y;
+        public Vector2Int(int x, int y)
+        {
+            X = x;
+            Y = y;
         }
     }
 

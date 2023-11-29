@@ -24,7 +24,7 @@ namespace HTML_LibraryTest
 
             root.Append(body);
             body.Append(p);
-            p.Append(text);
+            p.Append(text);  
 
             HTML root2 = new HTML(new Body(new Paragraph(new Text("Hello World"))));
 
@@ -191,8 +191,29 @@ namespace HTML_LibraryTest
 
             Image image = new Image(new Source($"{ProjectDir}\\OpenHTML\\image.png"),
                 new AltText("Test image!"), new Width(256), new Height(256));
+            
+            // Testing out image Map stuff
+            Map map = new Map(
+                "testClick",
+                new Area(new HyperTextReference($"{TestOutputDir}\\Tables.html")));
+            Map rectMap = new Map(
+                "rectTestClick",
+                new Area(
+                    new Rectange(), 
+                    new RectangeCoordinates(
+                        new Vector2Int(10,10), new Vector2Int(200,200)),
+                    new HyperTextReference($"{TestOutputDir}\\Tables.html")
+                )
+            );
+            Image clickImage = new Image(new Source($"{ProjectDir}\\OpenHTML\\image.png"),
+                new AltText("Test image!"), new Width(256), new Height(256), new UseMap(map.mapName.Value));
+            Image rectimage = new Image(new Source($"{ProjectDir}\\OpenHTML\\image.png"),
+                new AltText("Test image!"), new Width(256), new Height(256), new UseMap(rectMap.mapName.Value));
 
             body.Append(image);
+            body.Append(clickImage, map);
+            body.Append(rectimage, rectMap);
+            //
 
             string rootSerial = ClassyHTML.Serializer.Serialize(root);
 
