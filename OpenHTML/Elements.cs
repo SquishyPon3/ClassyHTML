@@ -1,12 +1,15 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Numerics;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Principal;
 using ClassyHTML;
+using System.Collections;
 
 namespace ClassyHTML
 {
-    public abstract class Element
+    public abstract class Element : IEnumerable<Element>, IEnumerable
     {
         // Some of the Element names used do not match their
         // HTML element shorthand names. This dict allows translation
@@ -69,6 +72,25 @@ namespace ClassyHTML
         {
             Append(new Element[] {element});
             return element;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            // uses the strongly typed IEnumerable<T> implementation
+            return this.GetEnumerator();
+        }
+
+        public IEnumerator<Element> GetEnumerator()
+        {
+            foreach (Element element in this._Children)
+            {
+                yield return element;
+            }
+        }
+
+        public Element[] Add(params Element[]? elements)
+        {
+            return Append(elements);
         }
     }
 
@@ -176,6 +198,16 @@ namespace ClassyHTML
     public class Image : Element
     {
         protected override string _Name { get; set; } = "img";
+        [Required]
+        public Source Source;
+        public AltText? AltText;
+        public Width? Width;
+        public Height? Height;
+        public UseMap? UseMap;
+        
+        // Allows for { field } style construction. 
+        public Image() : base() { Append(Source,AltText,Width,Height,UseMap); }
+
         // Realized I can enforce specific child types through the 
         // constructor like this, need better way to handle the null
         // refs though, currently handling in the append func but the

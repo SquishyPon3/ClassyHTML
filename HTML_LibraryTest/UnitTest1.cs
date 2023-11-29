@@ -215,6 +215,17 @@ namespace HTML_LibraryTest
             body.Append(rectimage, rectMap);
             //
 
+            // Testing IEnumerable constructor method
+            Heading1 h1Test = new Heading1() {new Text("heading")};
+            body.Append(h1Test);
+
+            Image img = new Image() { 
+                Source = new Source(""),
+                Width = new Width(250),
+                Height = new Height(250),
+                AltText = new AltText("test image!")
+            };
+
             string rootSerial = ClassyHTML.Serializer.Serialize(root);
 
             using (FileStream fs = new FileStream(
