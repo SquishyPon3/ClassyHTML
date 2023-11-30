@@ -217,7 +217,8 @@ namespace HTML_LibraryTest
 
             // Testing IEnumerable constructor method
             Heading1 h1Test = new Heading1() {new Text("heading")};
-            body.Append(h1Test);
+            // Test append(obj).append(obj) on IEnumerable
+            body.Append(h1Test).Append(new Heading1(new Text("Test of Append.Append!")));;
 
             Image img = new Image() { 
                 Source = new Source(""),

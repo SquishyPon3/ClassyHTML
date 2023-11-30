@@ -43,7 +43,13 @@ namespace ClassyHTML
             Append(elements);
         }
 
-        public Element[] Append(params Element[]? elements)
+        // Might have been overcomplicating this, append is a part of
+        // IEnumerable (but also original non-IEnumerable implementation)
+        // Should look into simplifying and following Append & Add func 
+        // standards for IEnumerables. Append does not modify original collection.
+        // and returns new collection. Add modifies original collection and returns void.
+        // https://stackoverflow.com/questions/52355682/difference-between-a-lists-add-and-append-method
+        public Element Append(params Element[]? elements)
         {
             if (elements is null)
             {
@@ -65,13 +71,12 @@ namespace ClassyHTML
 
             _Children = children;
 
-            return _Children;
+            return this;
         }
 
         public Element Append(Element element)
         {
-            Append(new Element[] {element});
-            return element;
+            return Append(new Element[] {element});
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -88,9 +93,9 @@ namespace ClassyHTML
             }
         }
 
-        public Element[] Add(params Element[]? elements)
+        public void Add(params Element[]? elements)
         {
-            return Append(elements);
+            Append(elements);
         }
     }
 
