@@ -22,9 +22,9 @@ namespace HTML_LibraryTest
             Paragraph p = new Paragraph();
             Text text = new Text("Hello World");
 
-            root.Append(body);
-            body.Append(p);
-            p.Append(text);  
+            root.Add(body);
+            body.Add(p);
+            p.Add(text);  
 
             HTML root2 = new HTML(new Body(new Paragraph(new Text("Hello World"))));
 
@@ -53,9 +53,9 @@ namespace HTML_LibraryTest
             Button button = new Button(new Text("Enabled Button"));
             Button button2 = new Button(new Text("Disabled Button"), new Disabled());
 
-            root.Append(body);
-            body.Append(button);
-            body.Append(button2);
+            root.Add(body);
+            body.Add(button);
+            body.Add(button2);
 
             string rootSerial = ClassyHTML.Serializer.Serialize(root);
 
@@ -79,10 +79,10 @@ namespace HTML_LibraryTest
             Link link = new Link(rel, href);
             Head head = new Head(link);
             Body body = new Body();
-            root.Append(head);
-            root.Append(body);
+            root.Add(head);
+            root.Add(body);
 
-            body.Append(new Heading1(new Text("Example Table")));
+            body.Add(new Heading1(new Text("Example Table")));
 
             Table table = new Table(
                 new TableRow
@@ -105,7 +105,7 @@ namespace HTML_LibraryTest
                 )
             );
 
-            body.Append(table);
+            body.Add(table);
 
             string rootSerial = ClassyHTML.Serializer.Serialize(root);
 
@@ -171,7 +171,7 @@ namespace HTML_LibraryTest
 
             Head head = new Head();
             Body body = new Body();
-            root.Append(head, body);
+            root.Add(head, body);
 
             Paragraph para = new Paragraph(
                 new Style(
@@ -187,7 +187,7 @@ namespace HTML_LibraryTest
             Heading5 h5 = new Heading5(new Text("Heading 5"));
             Heading6 h6 = new Heading6(new Text("Heading 6"));
             
-            body.Append(para,h1,h2,h3,h4,h5,h6);
+            body.Add(para,h1,h2,h3,h4,h5,h6);
 
             Image image = new Image(new Source($"{ProjectDir}\\OpenHTML\\image.png"),
                 new AltText("Test image!"), new Width(256), new Height(256));
@@ -210,22 +210,26 @@ namespace HTML_LibraryTest
             Image rectimage = new Image(new Source($"{ProjectDir}\\OpenHTML\\image.png"),
                 new AltText("Test image!"), new Width(256), new Height(256), new UseMap(rectMap.mapName.Value));
 
-            body.Append(image);
-            body.Append(clickImage, map);
-            body.Append(rectimage, rectMap);
-            //
+            body.Add(image);
+            body.Add(clickImage, map);
+            body.Add(rectimage, rectMap);
 
             // Testing IEnumerable constructor method
             Heading1 h1Test = new Heading1() {new Text("heading")};
-            // Test append(obj).append(obj) on IEnumerable
-            body.Append(h1Test).Append(new Heading1(new Text("Test of Append.Append!")));;
+            
+            // Test append(obj).append(obj) on IEnumerable,
+            // should have to assign this value to body, but it just doesn't really work atm.
+            body.Append(h1Test).Append(new Heading1(new Text("Test of Append.Append!")));
 
             Image img = new Image() { 
-                Source = new Source(""),
-                Width = new Width(250),
-                Height = new Height(250),
-                AltText = new AltText("test image!")
+                new Source($"{ProjectDir}\\OpenHTML\\image.png"),
+                new AltText("Test image!"), 
+                new Width(256), 
+                new Height(256), 
+                new UseMap(map.mapName.Value)
             };
+
+            body.Add(img);
 
             string rootSerial = ClassyHTML.Serializer.Serialize(root);
 

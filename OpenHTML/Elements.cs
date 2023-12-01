@@ -7,6 +7,16 @@ using System.Security.Principal;
 using ClassyHTML;
 using System.Collections;
 
+// TODO: Move all child list info to the "Tag" type. 
+//  (Attribute also should not contain children)
+// TODO: Fix Append function not behaving as expected. 
+//  It should return a new  collection & not modify original collection.
+// TODO: Create "Void/Empty Tag" Type for tags which do 
+//  not contain child elements.
+
+// Follow HTML Spec Guidlines at:
+// https://html.spec.whatwg.org/multipage/ 
+
 namespace ClassyHTML
 {
     public abstract class Element : IEnumerable<Element>, IEnumerable
@@ -40,7 +50,7 @@ namespace ClassyHTML
         public Element() {}
         public Element(params Element[]? elements)
         {
-            Append(elements);
+            Add(elements);
         }
 
         // Might have been overcomplicating this, append is a part of
@@ -49,6 +59,50 @@ namespace ClassyHTML
         // standards for IEnumerables. Append does not modify original collection.
         // and returns new collection. Add modifies original collection and returns void.
         // https://stackoverflow.com/questions/52355682/difference-between-a-lists-add-and-append-method
+        public void Add(params Element[]? elements)
+        {
+            if (elements is null)
+            {
+                throw new WarningException("Cannot append empty element array.");
+            }                
+
+            elements = elements.Where(element => element != null).ToArray();
+
+            Element[] children = new Element[_Children.Length + elements.Length];
+
+            for (int i = 0; i < _Children.Length; i++)
+            {
+                children[i] = _Children[i];
+            }
+            for (int i = 0; i < elements.Length; i++)
+            {
+                children[i + _Children.Length] = elements[i];
+            }
+
+            _Children = children;
+        }
+
+        public void Add(Element element)
+        {
+            Add(new Element[] {element});
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            // uses the strongly typed IEnumerable<T> implementation
+            return this.GetEnumerator();
+        }
+
+        public IEnumerator<Element> GetEnumerator()
+        {
+            foreach (Element element in this._Children)
+            {
+                yield return element;
+            }
+        }
+
+        // TODO: This should return a new element with appended elements on top
+        // and not modify the original element's children array.
         public Element Append(params Element[]? elements)
         {
             if (elements is null)
@@ -72,30 +126,6 @@ namespace ClassyHTML
             _Children = children;
 
             return this;
-        }
-
-        public Element Append(Element element)
-        {
-            return Append(new Element[] {element});
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            // uses the strongly typed IEnumerable<T> implementation
-            return this.GetEnumerator();
-        }
-
-        public IEnumerator<Element> GetEnumerator()
-        {
-            foreach (Element element in this._Children)
-            {
-                yield return element;
-            }
-        }
-
-        public void Add(params Element[]? elements)
-        {
-            Append(elements);
         }
     }
 
@@ -188,7 +218,7 @@ namespace ClassyHTML
     }
 
     // Content
-    public class Text : Element
+    public class Text : Tag
     {
         protected override string _Name { get; set; } = "";
         string _Value = "";
@@ -200,7 +230,7 @@ namespace ClassyHTML
     }
 
     // Images
-    public class Image : Element
+    public class Image : Tag
     {
         protected override string _Name { get; set; } = "img";
         [Required]
@@ -211,7 +241,7 @@ namespace ClassyHTML
         public UseMap? UseMap;
         
         // Allows for { field } style construction. 
-        public Image() : base() { Append(Source,AltText,Width,Height,UseMap); }
+        public Image() : base() { Add(Source,AltText,Width,Height,UseMap); }
 
         // Realized I can enforce specific child types through the 
         // constructor like this, need better way to handle the null
@@ -222,25 +252,25 @@ namespace ClassyHTML
                 : base(source, altText, width, height, useMap) { }
     }
 
-    public class Map : Element
+    public class Map : Tag
     {
         protected override string _Name { get; set; } = "map";
         public Name mapName;
         public Map(string name, params Area[] areas) : base()
         {
             mapName = new Name(name);
-            Append(mapName);
-            Append(areas);
+            Add(mapName);
+            Add(areas);
         }
         public Map(Name name, params Area[] areas) : base()
         { 
             mapName = name;
-            Append(mapName);
-            Append(areas);
+            Add(mapName);
+            Add(areas);
         }
     }
 
-    public class Area : Element
+    public class Area : Tag
     {
         protected override string _Name { get; set; } = "area";
         // Defines a "Default" shape Area. Entire area is clickable.
@@ -253,7 +283,7 @@ namespace ClassyHTML
             : base(poly,coordinates,href) { }
     }
 
-    public class Picture : Element
+    public class Picture : Tag
     {
         protected override string _Name { get; set; } = "picture";
         public Picture() : base() { throw new NotImplementedException(); }
@@ -584,7 +614,7 @@ namespace ClassyHTML
 
     public class Serializer
     {
-        public static string Serialize(Element rootElement, int depth = 0) 
+        public static string Serialize(Tag rootElement, int depth = 0) 
         {
             string attributes = "";
             string head = rootElement.Name;      
@@ -614,7 +644,11 @@ namespace ClassyHTML
                     elements += $"\n{tabs}{tab}{text.Value}";
                     continue;
                 }
-                elements += $"\n{Serialize(element, depth + 1)}";
+
+                // Attributes & "Void Elements" cannot contain child tags
+                // and thus will not be serialized. Need to add specific
+                // differences in tag / void tag / attribute
+                elements += $"\n{Serialize((Tag)element, depth + 1)}";
                 //for (int i = 0; i < depth + 1; i++) { elements += tab; }
             }
 
