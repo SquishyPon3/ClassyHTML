@@ -149,6 +149,13 @@ namespace ClassyHTML
         public Tag(params Element[] elements) : base(elements) { }
     }
 
+    // Void elements are tags which do not have any child nodes.
+    // we hold onto the child list solely for attributes.
+    public abstract class VoidElement : Element
+    {
+        public VoidElement(params Attribute[] attributes) : base(attributes) { }
+    }
+
     public abstract class Attribute : Element
     {
         protected virtual string _Value { get; set; } = "default_value";
@@ -614,13 +621,14 @@ namespace ClassyHTML
 
     public class Serializer
     {
+        static string tab = "    ";
+
         public static string Serialize(Tag rootElement, int depth = 0) 
         {
             string attributes = "";
             string head = rootElement.Name;      
             string end = rootElement.Name;
             string elements = "";
-            string tab = "    ";
             string tabs = "";
 
             for (int i = 0; i < depth; i++) { tabs += tab; }
@@ -630,13 +638,17 @@ namespace ClassyHTML
                 if (element is null)
                     continue;
 
-                //for (int i = 0; i < depth + 1; i++) { elements += tab; }
                 Type type = element.GetType();
                 if (type.IsSubclassOf(typeof(Attribute)))
                 {
                     Attribute attribute = (Attribute)element;
                     attributes += $" {attribute.Name}=\"{attribute.Value}\"";
                     continue;
+                }
+                if (type.IsSubclassOf(typeof(VoidElement)))
+                {
+                    VoidElement voidElement = (VoidElement)element;
+                    elements += $"\n{Serialize(voidElement, depth + 1)}";
                 }
                 if (type == typeof(Text))
                 {
@@ -653,6 +665,28 @@ namespace ClassyHTML
             }
 
             string output = $"{tabs}<{head}{attributes}>{elements}\n{tabs}</{end}>";
+
+            return output;
+        }
+
+        public static string Serialize(VoidElement rootElement, int depth = 0)
+        {
+            string attributes = "";
+            string tabs = "";
+
+            for (int i = 0; i < depth; i++) { tabs += tab; }
+
+            // Void Elements should only ever contain attributes.
+            foreach (Attribute attribute in rootElement.Children)
+            {
+                if (attribute is null)
+                    continue;
+
+                attributes += $" {attribute.Name}=\"{attribute.Value}\"";
+                continue;
+            }
+            
+            string output = $"{tabs}<{rootElement.Name}{attributes}/>";
 
             return output;
         }
