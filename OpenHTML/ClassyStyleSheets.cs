@@ -110,7 +110,7 @@ namespace ClassyStyleSheets
         }
     }
 
-    public class Property
+    public abstract class Property
     {
         protected virtual string _Name { get; set; } = "property-name";
         public string Name { get { return _Name; } }

@@ -160,6 +160,7 @@ namespace ClassyHTML
     {
         protected virtual string _Value { get; set; } = "default_value";
         public string Value { get { return _Value; } }
+        // Attributes should not have child elements...
         public Attribute(params Element[] elements) : base(elements) { }
     }
 
