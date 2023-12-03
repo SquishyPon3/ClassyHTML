@@ -43,9 +43,9 @@ need to be added to match the spec. Though plenty for some experimentation!
 After you have built out your HTML and / or CSS trees you will  
 then need to actually serialize the objects into their respective files.  
 Both the ClassyHTML and ClassyCSS namespaces contain a Serializer static object.  
-Use the Serializers Serialize() static function to read in the parent element / style sheet.  
-to return a formatted string containing every object's infromation perfectly ready  
-to write into a file's stream.
+Use the Serializers Serialize() static function to read in the parent element / style sheet  
+and return a formatted string containing every object's information perfectly ready  
+to write into a file's stream. Open the file and observe your new simple web page!
 
 ## HTML
 ### Element
