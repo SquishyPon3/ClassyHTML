@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Numerics;
@@ -104,7 +104,7 @@ namespace ClassyHTML
         // TODO: Currently a virtual, should be an abstract to
         // enforce implementations. In Testing atm.
         public virtual Element Append(params Element[]? elements) 
-        {
+        { 
             throw new NotImplementedException(); 
         }
         // {
@@ -196,7 +196,7 @@ namespace ClassyHTML
     public class Link : Tag
     {
         protected override string _Name { get; set; } = "link";
-        public Link(params Attribute[] attributes) : base(attributes) {  }
+        public Link(params Attribute[] attributes) : base(attributes) { }
     }
 
     public class Paragraph : Tag
@@ -294,12 +294,12 @@ namespace ClassyHTML
         protected override string _Name { get; set; } = "area";
         // Defines a "Default" shape Area. Entire area is clickable.
         public Area(HyperTextReference href) : base(new DefaultShape(), href) { }
-        public Area(Rectange rect, RectangeCoordinates coordinates, HyperTextReference href) 
-            : base(rect,coordinates,href) { }
-        public Area(Circle circle, CircleCoordinates coordinates, HyperTextReference href) 
-            : base(circle,coordinates,href) { }
-        public Area(Polygon poly, PolygonCoordinates coordinates, HyperTextReference href) 
-            : base(poly,coordinates,href) { }
+        public Area(Rectange rect, RectangeCoordinates coordinates, 
+                HyperTextReference href) : base(rect,coordinates,href) { }
+        public Area(Circle circle, CircleCoordinates coordinates, 
+                HyperTextReference href) : base(circle,coordinates,href) { }
+        public Area(Polygon poly, PolygonCoordinates coordinates, 
+                HyperTextReference href) : base(poly,coordinates,href) { }
     }
 
     public class Picture : Tag
