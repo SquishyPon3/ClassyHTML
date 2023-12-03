@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Numerics;
@@ -44,8 +44,8 @@ namespace ClassyHTML
 
         protected virtual string _Name { get; set; } = "DEFAULT_ELEMENT";
         public string Name { get { return _Name; } }
-        private Element[] _Children = { };
-        public Element[] Children { get { return _Children; } }
+        private Element[] _Children = Array.Empty<Element>();
+        public Element[] Children { get { return _Children; } set { _Children = value; } }
 
         public Element() {}
         public Element(params Element[]? elements)
@@ -63,7 +63,7 @@ namespace ClassyHTML
         {
             if (elements is null)
             {
-                throw new WarningException("Cannot append empty element array.");
+                throw new WarningException("Cannot add empty element array.");
             }                
 
             elements = elements.Where(element => element != null).ToArray();
@@ -101,32 +101,35 @@ namespace ClassyHTML
             }
         }
 
-        // TODO: This should return a new element with appended elements on top
-        // and not modify the original element's children array.
-        public Element Append(params Element[]? elements)
+        // TODO: Currently a virtual, should be an abstract to
+        // enforce implementations. In Testing atm.
+        public virtual Element Append(params Element[]? elements) 
         {
-            if (elements is null)
-            {
-                throw new WarningException("Cannot append empty element array.");
-            }                
-
-            elements = elements.Where(element => element != null).ToArray();
-
-            Element[] children = new Element[_Children.Length + elements.Length];
-
-            for (int i = 0; i < _Children.Length; i++)
-            {
-                children[i] = _Children[i];
-            }
-            for (int i = 0; i < elements.Length; i++)
-            {
-                children[i + _Children.Length] = elements[i];
-            }
-
-            _Children = children;
-
-            return this;
+            throw new NotImplementedException(); 
         }
+        // {
+        //     if (elements is null)
+        //     {
+        //         throw new WarningException("Cannot append empty element array.");
+        //     }                
+
+        //     elements = elements.Where(element => element != null).ToArray();
+
+        //     Element[] children = new Element[_Children.Length + elements.Length];
+
+        //     for (int i = 0; i < _Children.Length; i++)
+        //     {
+        //         children[i] = _Children[i];
+        //     }
+        //     for (int i = 0; i < elements.Length; i++)
+        //     {
+        //         children[i + _Children.Length] = elements[i];
+        //     }
+
+        //     _Children = children;
+
+        //     return this;
+        // }
     }
 
     /// <summary>
@@ -168,6 +171,10 @@ namespace ClassyHTML
     {
         protected override string _Name { get; set; } = "HTML";
         public HTML(params Element[] elements) : base(elements) { }
+        public override HTML Append(params Element[]? elements)
+        {
+            return new HTML() { Children, elements };
+        }
     }
 
     public class Head : Tag
@@ -180,6 +187,10 @@ namespace ClassyHTML
     {
         protected override string _Name { get; set; } = "body";
         public Body(params Element[] elements) : base(elements) { }
+        public override Body Append(params Element[]? elements)
+        {
+            return new Body() { Children, elements };
+        }
     }
 
     public class Link : Tag
