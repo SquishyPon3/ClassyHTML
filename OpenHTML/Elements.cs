@@ -218,6 +218,12 @@ namespace ClassyHTML
         }
     }
 
+    public class Title : Tag
+    {
+         protected override string _Name { get; set; } = "title";
+        public Title(params Element[] elements) : base(elements) { }
+    }
+
     public class Link : Tag
     {
         protected override string _Name { get; set; } = "link";
@@ -304,6 +310,51 @@ namespace ClassyHTML
         {
             _Value = value;
         }
+    }
+
+    public class Anchor : Tag 
+    {
+        protected override string _Name { get; set; } = "a";
+        // TODO: add target, download, ping, hreflang, type, referrerpolicy
+        public Anchor(HyperTextReference href, 
+                Relationship relationship, Text text) 
+            : base(href, relationship, text) { }
+    }
+
+    public class Emphasis : Tag
+    {
+        protected override string _Name { get; set; } = "em";
+        public Emphasis(params Element[] elements) : base(elements) { }
+    }
+
+    public class Bold : Tag
+    {
+        protected override string _Name { get; set; } = "b";
+        public Bold(params Element[] elements) : base(elements) { }
+    }
+
+    public class Italics : Tag
+    {
+        protected override string _Name { get; set; } = "i";
+        public Italics(params Element[] elements) : base(elements) { }
+    }
+
+    public class Small : Tag
+    {
+        protected override string _Name { get; set; } = "small";
+        public Small(params Element[] elements) : base(elements) { }
+    }
+
+    public class Underline : Tag
+    {
+        protected override string _Name { get; set; } = "u";
+        public Underline(params Element[] elements) : base(elements) { }
+    }
+
+    public class StrikeThrough : Tag
+    {
+        protected override string _Name { get; set; } = "strik";
+        public StrikeThrough(params Element[] elements) : base(elements) { }
     }
 
     // Images
