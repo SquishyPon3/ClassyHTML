@@ -87,6 +87,22 @@ namespace ClassyHTML
             Add(new Element[] {element});
         }
 
+        public bool Remove(Element element)
+        {
+            if (element == null)
+                return false;
+                
+            // A little unfortunate and probably slow
+            List<Element> elements = _Children.ToList();
+            if (!elements.Remove(element))
+            {
+                return false;
+            }
+
+            _Children = elements.ToArray();
+            return true;
+        }
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             // uses the strongly typed IEnumerable<T> implementation
@@ -181,6 +197,10 @@ namespace ClassyHTML
     {
         protected override string _Name { get; set; } = "head";
         public Head(params Element[] elements) : base(elements) { }
+        public override Head Append(params Element[]? elements)
+        {
+            return new Head() { Children, elements };
+        }
     }
 
     public class Body : Tag
@@ -197,46 +217,79 @@ namespace ClassyHTML
     {
         protected override string _Name { get; set; } = "link";
         public Link(params Attribute[] attributes) : base(attributes) { }
+        public override Link Append(params Element[]? elements)
+        {
+            return new Link() { Children, elements };
+        }
     }
 
     public class Paragraph : Tag
     {
         protected override string _Name { get; set; } = "p";
         public Paragraph(params Element[] elements) : base(elements) { }
+        public override Paragraph Append(params Element[]? elements)
+        {
+            return new Paragraph() { Children, elements };
+        }
     }
 
     public class Heading1 : Tag 
     {
         protected override string _Name { get; set; } = "h1";
         public Heading1(params Element[] elements) : base(elements) { }
+        public override Heading1 Append(params Element[]? elements)
+        {
+            return new Heading1() { Children, elements };
+        }
     }
     public class Heading2 : Tag 
     {
         protected override string _Name { get; set; } = "h2";
         public Heading2(params Element[] elements) : base(elements) { }
+        public override Heading2 Append(params Element[]? elements)
+        {
+            return new Heading2() { Children, elements };
+        }
     }
     public class Heading3 : Tag 
     {
         protected override string _Name { get; set; } = "h3";
         public Heading3(params Element[] elements) : base(elements) { }
+        public override Heading3 Append(params Element[]? elements)
+        {
+            return new Heading3() { Children, elements };
+        }
     }
     public class Heading4 : Tag 
     {
         protected override string _Name { get; set; } = "h4";
         public Heading4(params Element[] elements) : base(elements) { }
+        public override Heading4 Append(params Element[]? elements)
+        {
+            return new Heading4() { Children, elements };
+        }
     }
     public class Heading5 : Tag 
     {
         protected override string _Name { get; set; } = "h5";
         public Heading5(params Element[] elements) : base(elements) { }
+        public override Heading5 Append(params Element[]? elements)
+        {
+            return new Heading5() { Children, elements };
+        }
     }
     public class Heading6 : Tag 
     {
         protected override string _Name { get; set; } = "h6";
         public Heading6(params Element[] elements) : base(elements) { }
+        public override Heading6 Append(params Element[]? elements)
+        {
+            return new Heading6() { Children, elements };
+        }
     }
 
     // Content
+    // Text should probably be a VoidElement as it only has attributes.
     public class Text : Tag
     {
         protected override string _Name { get; set; } = "";

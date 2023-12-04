@@ -217,10 +217,10 @@ namespace HTML_LibraryTest
             // Testing IEnumerable constructor method
             Heading1 h1Test = new Heading1() {new Text("heading")};
 
-            // TODO: Cannot set body = the appended to body, it does not update
-            // the body within the HTML parent tag which is extremely annoying.
-            // Figure out why that is!
+            // Does not reflect in references to body, 
+            // as this is an entirely new body.
             body.Children = body.Append(h1Test).Append(new Heading1(new Text("Test of Append.Append!"))).Children;
+            body = body.Append(h1Test).Append(new Heading1(new Text("Test of Append.Append!")));
 
             Image img = new Image() { 
                 new Source($"{ProjectDir}\\OpenHTML\\image.png"),
