@@ -91,7 +91,7 @@ namespace ClassyHTML
         {
             if (element == null)
                 return false;
-                
+
             // A little unfortunate and probably slow
             List<Element> elements = _Children.ToList();
             if (!elements.Remove(element))
@@ -117,8 +117,13 @@ namespace ClassyHTML
             }
         }
 
-        // TODO: Currently a virtual, should be an abstract to
-        // enforce implementations. In Testing atm.
+
+        // Might just get rid of this, openxml Append seems to not follow
+        // the .NET standards for Append() for IEnumerables ...
+        // IEnumerable
+        // https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.append?view=net-8.0
+        // OpenXML
+        // https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.openxmlelement.append?view=openxml-2.8.1
         public virtual Element Append(params Element[]? elements) 
         { 
             throw new NotImplementedException(); 
