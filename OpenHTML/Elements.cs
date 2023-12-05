@@ -19,7 +19,7 @@ using System.Collections;
 
 namespace ClassyHTML
 {
-    public abstract class Element : IEnumerable<Element>, IEnumerable
+    public abstract class Element : ICloneable, IEnumerable<Element>, IEnumerable
     {
         // Some of the Element names used do not match their
         // HTML element shorthand names. This dict allows translation
@@ -50,16 +50,10 @@ namespace ClassyHTML
         public Element() {}
         public Element(params Element[]? elements)
         {
-            Add(elements);
+            Append(elements);
         }
 
-        // Might have been overcomplicating this, append is a part of
-        // IEnumerable (but also original non-IEnumerable implementation)
-        // Should look into simplifying and following Append & Add func 
-        // standards for IEnumerables. Append does not modify original collection.
-        // and returns new collection. Add modifies original collection and returns void.
-        // https://stackoverflow.com/questions/52355682/difference-between-a-lists-add-and-append-method
-        public void Add(params Element[]? elements)
+        public void Append(params Element[]? elements)
         {
             if (elements is null)
             {
@@ -82,9 +76,21 @@ namespace ClassyHTML
             _Children = children;
         }
 
-        public void Add(Element element)
+        public void Append(Element element)
         {
-            Add(new Element[] {element});
+            Append(new Element[] {element});
+        }
+        
+        public Element AppendChild(Element element)
+        {
+            Append(new Element[] {element});
+            return element;
+        }
+
+        public virtual object Clone()
+        {
+            // temporarily virtual, likely abstract in future...
+            throw new NotImplementedException();
         }
 
         public bool Remove(Element element)
@@ -116,41 +122,6 @@ namespace ClassyHTML
                 yield return element;
             }
         }
-
-
-        // Might just get rid of this, openxml Append seems to not follow
-        // the .NET standards for Append() for IEnumerables ...
-        // IEnumerable
-        // https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.append?view=net-8.0
-        // OpenXML
-        // https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.openxmlelement.append?view=openxml-2.8.1
-        public virtual Element Append(params Element[]? elements) 
-        { 
-            throw new NotImplementedException(); 
-        }
-        // {
-        //     if (elements is null)
-        //     {
-        //         throw new WarningException("Cannot append empty element array.");
-        //     }                
-
-        //     elements = elements.Where(element => element != null).ToArray();
-
-        //     Element[] children = new Element[_Children.Length + elements.Length];
-
-        //     for (int i = 0; i < _Children.Length; i++)
-        //     {
-        //         children[i] = _Children[i];
-        //     }
-        //     for (int i = 0; i < elements.Length; i++)
-        //     {
-        //         children[i + _Children.Length] = elements[i];
-        //     }
-
-        //     _Children = children;
-
-        //     return this;
-        // }
     }
 
     /// <summary>
@@ -192,30 +163,18 @@ namespace ClassyHTML
     {
         protected override string _Name { get; set; } = "HTML";
         public HTML(params Element[] elements) : base(elements) { }
-        public override HTML Append(params Element[]? elements)
-        {
-            return new HTML() { Children, elements };
-        }
     }
 
     public class Head : Tag
     {
         protected override string _Name { get; set; } = "head";
         public Head(params Element[] elements) : base(elements) { }
-        public override Head Append(params Element[]? elements)
-        {
-            return new Head() { Children, elements };
-        }
     }
 
     public class Body : Tag
     {
         protected override string _Name { get; set; } = "body";
         public Body(params Element[] elements) : base(elements) { }
-        public override Body Append(params Element[]? elements)
-        {
-            return new Body() { Children, elements };
-        }
     }
 
     public class Title : Tag
@@ -228,75 +187,43 @@ namespace ClassyHTML
     {
         protected override string _Name { get; set; } = "link";
         public Link(params Attribute[] attributes) : base(attributes) { }
-        public override Link Append(params Element[]? elements)
-        {
-            return new Link() { Children, elements };
-        }
     }
 
     public class Paragraph : Tag
     {
         protected override string _Name { get; set; } = "p";
         public Paragraph(params Element[] elements) : base(elements) { }
-        public override Paragraph Append(params Element[]? elements)
-        {
-            return new Paragraph() { Children, elements };
-        }
     }
 
     public class Heading1 : Tag 
     {
         protected override string _Name { get; set; } = "h1";
         public Heading1(params Element[] elements) : base(elements) { }
-        public override Heading1 Append(params Element[]? elements)
-        {
-            return new Heading1() { Children, elements };
-        }
     }
     public class Heading2 : Tag 
     {
         protected override string _Name { get; set; } = "h2";
         public Heading2(params Element[] elements) : base(elements) { }
-        public override Heading2 Append(params Element[]? elements)
-        {
-            return new Heading2() { Children, elements };
-        }
     }
     public class Heading3 : Tag 
     {
         protected override string _Name { get; set; } = "h3";
         public Heading3(params Element[] elements) : base(elements) { }
-        public override Heading3 Append(params Element[]? elements)
-        {
-            return new Heading3() { Children, elements };
-        }
     }
     public class Heading4 : Tag 
     {
         protected override string _Name { get; set; } = "h4";
         public Heading4(params Element[] elements) : base(elements) { }
-        public override Heading4 Append(params Element[]? elements)
-        {
-            return new Heading4() { Children, elements };
-        }
     }
     public class Heading5 : Tag 
     {
         protected override string _Name { get; set; } = "h5";
         public Heading5(params Element[] elements) : base(elements) { }
-        public override Heading5 Append(params Element[]? elements)
-        {
-            return new Heading5() { Children, elements };
-        }
     }
     public class Heading6 : Tag 
     {
         protected override string _Name { get; set; } = "h6";
         public Heading6(params Element[] elements) : base(elements) { }
-        public override Heading6 Append(params Element[]? elements)
-        {
-            return new Heading6() { Children, elements };
-        }
     }
 
     // Content
@@ -368,8 +295,8 @@ namespace ClassyHTML
         public Height? Height;
         public UseMap? UseMap;
         
-        // Allows for { field } style construction. 
-        public Image() : base() { Add(Source,AltText,Width,Height,UseMap); }
+        // // Allows for { field } style construction. 
+        public Image() : base() { }
 
         // Realized I can enforce specific child types through the 
         // constructor like this, need better way to handle the null
@@ -387,14 +314,14 @@ namespace ClassyHTML
         public Map(string name, params Area[] areas) : base()
         {
             mapName = new Name(name);
-            Add(mapName);
-            Add(areas);
+            Append(mapName);
+            Append(areas);
         }
         public Map(Name name, params Area[] areas) : base()
         { 
             mapName = name;
-            Add(mapName);
-            Add(areas);
+            Append(mapName);
+            Append(areas);
         }
     }
 
