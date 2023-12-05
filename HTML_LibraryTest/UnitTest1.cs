@@ -1,4 +1,6 @@
 using ClassyHTML;
+using ClassyHTML.Tags;
+using ClassyHTML.Attributes;
 using ClassyStyleSheets;
 using System.Buffers;
 using System.Drawing;
