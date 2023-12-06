@@ -231,31 +231,8 @@ namespace ClassyHTML.Attributes
             : base(coordinates) { }
     }
 
-    // CSS
-    public class Style : Attribute
-    {
-        protected override string _Name { get; set; } = "style";
-        ClassyStyleSheets.Property[] _properties;
-        public ClassyStyleSheets.Property[] properties 
-        { 
-            get { return _properties; } 
-            set 
-            { 
-                _properties = value; 
-                _Value = ClassyStyleSheets.Serializer.Serialize(value);
-                // TODO: Make this a for loop that checks for these,
-                // just way more efficient than making mult arrays...
-                // Remove spaces and new line character
-                _Value = _Value.Replace(" ", string.Empty);
-                _Value = _Value.Replace("\n", string.Empty);
-            } 
-        }
-        public Style(params ClassyStyleSheets.Property[] props)
-        {
-            properties = props;
-        }
-
-        public class InputType : Attribute
+    // Input Attributes
+    public class InputType : Attribute
         {
             public enum InputTypes 
             {
@@ -303,6 +280,46 @@ namespace ClassyHTML.Attributes
                     _Value += sets[i];
                 }
             }
+
+            // Might move this elsewhere, perhaps in the serializer class?
+            // any name which contains a "_" needs to be replaced with a "-"
+            static string valueToString(AutoCompleteValue value)
+            {
+                string output = "";
+                string[] sets = Enum.GetName(value).Split("_");
+                for (int i = 0; i < sets.Length; i++)
+                {
+                    if (i != 0)
+                        output += "-";
+
+                    output += sets[i];
+                }
+                return output;
+            }
+        }
+
+    // CSS
+    public class Style : Attribute
+    {
+        protected override string _Name { get; set; } = "style";
+        ClassyStyleSheets.Property[] _properties;
+        public ClassyStyleSheets.Property[] properties 
+        { 
+            get { return _properties; } 
+            set 
+            { 
+                _properties = value; 
+                _Value = ClassyStyleSheets.Serializer.Serialize(value);
+                // TODO: Make this a for loop that checks for these,
+                // just way more efficient than making mult arrays...
+                // Remove spaces and new line character
+                _Value = _Value.Replace(" ", string.Empty);
+                _Value = _Value.Replace("\n", string.Empty);
+            } 
+        }
+        public Style(params ClassyStyleSheets.Property[] props)
+        {
+            properties = props;
         }
     }
 }
