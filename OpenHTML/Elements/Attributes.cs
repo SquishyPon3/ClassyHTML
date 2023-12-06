@@ -254,5 +254,55 @@ namespace ClassyHTML.Attributes
         {
             properties = props;
         }
+
+        public class InputType : Attribute
+        {
+            public enum InputTypes 
+            {
+                button, checkbox, color, date, datetime_local, email,
+                file, hidden, image, month, number, password, radio, range,
+                reset, search, submit, tel, text, time, url, week
+            }
+
+            public InputType(InputTypes inputType): base() 
+            {
+                if (inputType == InputTypes.datetime_local)
+                    _Value = "datetime-local";
+                else
+                    _Value = Enum.GetName(inputType); 
+            }
+        }
+
+        public class AutoComplete : Attribute
+        {
+            public enum AutoCompleteValue 
+            {
+                on, off, address_line1, address_line2, address_line3,
+                address_level1, address_level2, address_level3,
+                address_level4, street_address, county, country_name,
+                postal_code, name, additional_name, family_name, give_name,
+                honoric_prefix, honoric_suffic, nickname, organization_title,
+                username, new_password, current_password, bday, bday_day,
+                bday_month, bday_year, sex, one_time_code, organization,
+                cc_name, cc_given_name, cc_additional_name, cc_number,
+                cc_exp, cc_exp_month, cc_exp_year, cc_csc, cc_type,
+                transaction_currency, transaction_amount, language, url,
+                email, photo, tel, tel_country_code, tel_national,
+                tel_area_code, tel_local, tel_local_prefix, tel_local_suffix,
+                tel_extension, impp
+            }
+
+            public AutoComplete(AutoCompleteValue value)
+            {
+                string[] sets = Enum.GetName(value).Split("_");
+                for (int i = 0; i < sets.Length; i++)
+                {
+                    if (i != 0)
+                        _Value += "-";
+
+                    _Value += sets[i];
+                }
+            }
+        }
     }
 }
