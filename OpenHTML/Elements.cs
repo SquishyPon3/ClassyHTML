@@ -129,10 +129,16 @@ namespace ClassyHTML
 
     public abstract class Attribute : Element
     {
-        protected virtual string _Value { get; set; } = "default_value";
-        public string Value { get { return _Value; } }
+        protected virtual string? _Value { get; set; } = "default_value";
+        public string? Value { get { return _Value; } }
         // Attributes should not have child elements...
-        public Attribute(params Element[] elements) : base(elements) { }
+        public Attribute() : base() { }
+    }
+
+    
+    public abstract class GlobalAttribute : Attribute
+    {
+        public GlobalAttribute() : base() { }
     }
 
     // Void elements are tags which do not have any child nodes.
@@ -140,20 +146,6 @@ namespace ClassyHTML
     public abstract class VoidElement : Element
     {
         public VoidElement(params Attribute[] attributes) : base(attributes) { }
-    }
-
-    /// <summary>
-    /// Used as an additional identifer for CSS & code behind.
-    /// Must be unique for each HTML element applied to.
-    /// </summary>
-    public class HTML_ID
-    {
-        public string Value;
-
-        public HTML_ID(string name)
-        {
-            Value = $"#{name}";
-        }
     }
 
     public class Serializer
@@ -179,7 +171,11 @@ namespace ClassyHTML
                 if (type.IsSubclassOf(typeof(Attribute)))
                 {
                     Attribute attribute = (Attribute)element;
-                    attributes += $" {attribute.Name}=\"{attribute.Value}\"";
+                    attributes += $" {attribute.Name}";
+                    // Some attributes don't need a value, if val is null
+                    // it does not contain any value info, so we drop the =""
+                        if (attribute.Value != null)
+                            attributes += $"=\"{attribute.Value}\"";
                     continue;
                 }
                 if (type.IsSubclassOf(typeof(VoidElement)))
