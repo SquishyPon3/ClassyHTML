@@ -1,9 +1,9 @@
 namespace ClassyHTML.VoidElements
 {
-    class Textt : VoidElement
+    class Input : VoidElement
     {
         string Value = "";
-        Textt(string value)
+        Input(string value)
         {
             Value = value;
         }
