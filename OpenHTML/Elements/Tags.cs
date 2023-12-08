@@ -27,6 +27,7 @@ namespace ClassyHTML.Tags
          protected override string _Name { get; set; } = "title";
         public Title(params Element[] elements) : base(elements) { }
     }
+    
     public class Paragraph : Tag
     {
         protected override string _Name { get; set; } = "p";
