@@ -312,6 +312,13 @@ namespace ClassyHTML.Attributes
         // public HyperTextReference(ClassyStyleSheets.StyleSheet styleSheet) { }
     }
 
+    public class Target : Attribute
+    {
+        public enum Location { _blank, _self, _parent, top }
+        public Target(Location location) { _Value = location.ToString(); }
+        public Target(string framename) { _Value = framename; }
+    }
+
     public class Source : Attribute
     {
         protected override string _Name { get; set; } = "src";

@@ -27,7 +27,7 @@ namespace ClassyHTML
             // Tables
             {typeof(TableData), "td"},
             {typeof(TableRow), "tr"},
-            {typeof(Column), "col"},
+            {typeof(TableColumn), "col"},
             {typeof(ColumnGroup), "colgroup"},
 
             // Headings
@@ -146,6 +146,8 @@ namespace ClassyHTML
     public abstract class VoidElement : Element
     {
         public VoidElement(params Attribute[] attributes) : base(attributes) { }
+        public VoidElement(GlobalAttribute[] globalAttributes, params Attribute[] attributes) 
+            : base ( globalAttributes.Concat(attributes).ToArray() ) { }
     }
 
     public class Serializer
@@ -182,6 +184,7 @@ namespace ClassyHTML
                 {
                     VoidElement voidElement = (VoidElement)element;
                     elements += $"\n{Serialize(voidElement, depth + 1)}";
+                    continue;
                 }
                 if (type == typeof(Text))
                 {

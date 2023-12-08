@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using ClassyHTML.Attributes;
+using ClassyHTML.VoidElements;
 
 namespace ClassyHTML.Tags
 {
@@ -26,13 +27,6 @@ namespace ClassyHTML.Tags
          protected override string _Name { get; set; } = "title";
         public Title(params Element[] elements) : base(elements) { }
     }
-
-    public class Link : Tag
-    {
-        protected override string _Name { get; set; } = "link";
-        public Link(params Attribute[] attributes) : base(attributes) { }
-    }
-
     public class Paragraph : Tag
     {
         protected override string _Name { get; set; } = "p";
@@ -169,19 +163,6 @@ namespace ClassyHTML.Tags
         }
     }
 
-    public class Area : Tag
-    {
-        protected override string _Name { get; set; } = "area";
-        // Defines a "Default" shape Area. Entire area is clickable.
-        public Area(HyperTextReference href) : base(new DefaultShape(), href) { }
-        public Area(Rectange rect, RectangeCoordinates coordinates, 
-                HyperTextReference href) : base(rect,coordinates,href) { }
-        public Area(Circle circle, CircleCoordinates coordinates, 
-                HyperTextReference href) : base(circle,coordinates,href) { }
-        public Area(Polygon poly, PolygonCoordinates coordinates, 
-                HyperTextReference href) : base(poly,coordinates,href) { }
-    }
-
     public class Picture : Tag
     {
         protected override string _Name { get; set; } = "picture";
@@ -201,10 +182,11 @@ namespace ClassyHTML.Tags
         public Caption(params Element[] elements) : base(elements) { }
     }
 
-    public class Column : Tag
+    // TODO: This should be a void element and only contain attributes.
+    public class TableColumn : Tag
     {
         protected override string _Name { get; set; } = "col";
-        public Column(params Element[] elements) : base(elements) { }
+        public TableColumn(params Element[] elements) : base(elements) { }
     }
 
     public class ColumnGroup : Tag
