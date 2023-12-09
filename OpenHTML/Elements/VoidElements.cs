@@ -65,6 +65,6 @@ namespace ClassyHTML.VoidElements
     public class Comment : VoidElement
     {
         protected override string _Name { get; set; } = "";
-        public Comment(string commentText) : base() { _Name = $"!-- {commentText} --"; }
+        public Comment(string commentText) : base() { _Name = $"{commentText}"; }
     }
 }

@@ -182,6 +182,12 @@ namespace ClassyHTML
                 }
                 if (type.IsSubclassOf(typeof(VoidElement)))
                 {
+                    if (type == typeof(Comment))
+                    {
+                        elements += $"\n{Serialize((Comment)element, depth++)}";
+                        continue;
+                    }
+
                     VoidElement voidElement = (VoidElement)element;
                     elements += $"\n{Serialize(voidElement, depth + 1)}";
                     continue;
@@ -228,6 +234,13 @@ namespace ClassyHTML
             string output = $"{tabs}<{rootElement.Name}{attributes}/>";
 
             return output;
+        }
+
+        public static string Serialize(Comment comment, int depth = 0)
+        {
+            string tabs = "";
+            for (int i = 0; i < depth; i++) { tabs += tab; }
+            return $"{tabs}<!-- {comment.Name} -->";
         }
     }
 
