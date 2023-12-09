@@ -44,4 +44,27 @@ namespace ClassyHTML.VoidElements
         // TODO: include all link specific attributes
         public Link(params Attribute[] attributes) : base(attributes) { }
     }
+
+    public class WordBreakOpportunity : VoidElement
+    {
+        protected override string _Name { get; set; } = "wbr";
+        public WordBreakOpportunity(params GlobalAttribute[] globalAttributes) : base(globalAttributes) { }
+    }
+
+    // Name conflict with Source Attribute
+    public class SourceElement : VoidElement
+    {
+        protected override string _Name { get; set; } = "source";
+        // TODO: include all Source (Element) specific attributes
+        public SourceElement(GlobalAttribute[] globalAttributes) : base(globalAttributes) { }
+    }
+
+    // TODO: Elements after the comment seem to become children of the comment
+    // or something to that effect? Weird...
+    // Maybe a weird place for this, but it is pretty close to a void element?
+    public class Comment : VoidElement
+    {
+        protected override string _Name { get; set; } = "";
+        public Comment(string commentText) : base() { _Name = $"!-- {commentText} --"; }
+    }
 }

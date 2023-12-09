@@ -207,6 +207,9 @@ namespace ClassyHTML
 
         public static string Serialize(VoidElement rootElement, int depth = 0)
         {
+            // TODO: Elements after a Comment seem to become 
+            // children of the comment or something to that effect? Weird...
+
             string attributes = "";
             string tabs = "";
 

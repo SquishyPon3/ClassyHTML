@@ -5,6 +5,7 @@ using ClassyStyleSheets;
 using System.Buffers;
 using System.Drawing;
 using System.Text;
+using ClassyHTML.VoidElements;
 
 namespace HTML_LibraryTest
 {
@@ -232,6 +233,7 @@ namespace HTML_LibraryTest
                 UseMap = new UseMap(map.mapName.Value)
             };
 
+            body.Append(new Comment("The image above is rather interesting."));
             body.Append(img);
 
             string rootSerial = ClassyHTML.Serializer.Serialize(root);
