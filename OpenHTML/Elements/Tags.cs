@@ -4,34 +4,71 @@ using ClassyHTML.VoidElements;
 
 namespace ClassyHTML.Tags
 {
+    // Document Element
     public class HTML : Tag
     {
         protected override string _Name { get; set; } = "HTML";
         public HTML(params Element[] elements) : base(elements) { }
     }
 
+    // Document Metadata
     public class Head : Tag
     {
         protected override string _Name { get; set; } = "head";
         public Head(params Element[] elements) : base(elements) { }
     }
 
+    public class Title : Tag
+    {
+        protected override string _Name { get; set; } = "title";
+        public Title(params Element[] elements) : base(elements) { }
+    }
+
+    // Sections
     public class Body : Tag
     {
         protected override string _Name { get; set; } = "body";
         public Body(params Element[] elements) : base(elements) { }
     }
 
-    public class Title : Tag
+    public class Article : Tag
     {
-         protected override string _Name { get; set; } = "title";
-        public Title(params Element[] elements) : base(elements) { }
+        protected override string _Name { get; set; } = "article";
+        public Article(params Element[] elements) : base(elements) { }
     }
-    
-    public class Paragraph : Tag
+
+    public class Section : Tag
     {
-        protected override string _Name { get; set; } = "p";
-        public Paragraph(params Element[] elements) : base(elements) { }
+        protected override string _Name { get; set; } = "section";
+        public Section(params Element[] elements) : base(elements) { }
+    }
+
+    public class Navigation : Tag
+    {
+        protected override string _Name { get; set; } = "nav";
+        public Navigation(params Element[] elements) : base(elements) { }
+    }
+
+    public class HeadingGroup : Tag
+    {
+        protected override string _Name { get; set; } = "hgroup";
+        // Params should be global attributes,
+        // 0 - 1 p element, 1 h1 - h6 element, 0 - 1 p element
+        public HeadingGroup(params Element[] elements) : base(elements) { }
+    }
+
+    public class Header : Tag
+    {
+        protected override string _Name { get; set; } = "header";
+        // Should not be able to have header or footer descendants
+        public Header(params Element[] elements) : base(elements) { }
+    }
+
+    public class Footer : Tag
+    {
+        protected override string _Name { get; set; } = "footer";
+        // Should not be able to have header or footer descendants
+        public Footer(params Element[] elements) : base(elements) { }
     }
 
     public class Heading1 : Tag 
@@ -63,6 +100,13 @@ namespace ClassyHTML.Tags
     {
         protected override string _Name { get; set; } = "h6";
         public Heading6(params Element[] elements) : base(elements) { }
+    }
+
+    // Grouping content
+    public class Paragraph : Tag
+    {
+        protected override string _Name { get; set; } = "p";
+        public Paragraph(params Element[] elements) : base(elements) { }
     }
 
     // Content

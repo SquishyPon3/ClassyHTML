@@ -59,8 +59,6 @@ namespace ClassyHTML.VoidElements
         public SourceElement(GlobalAttribute[] globalAttributes) : base(globalAttributes) { }
     }
 
-    // TODO: Elements after the comment seem to become children of the comment
-    // or something to that effect? Weird...
     // Maybe a weird place for this, but it is pretty close to a void element?
     public class Comment : VoidElement
     {
