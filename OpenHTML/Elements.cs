@@ -54,7 +54,7 @@ namespace ClassyHTML
         {
             if (elements is null)
             {
-                throw new WarningException("Cannot add empty element array.");
+                throw new ArgumentNullException("Cannot add Null element array.");
             }                
 
             elements = elements.Where(element => element != null).ToArray();
