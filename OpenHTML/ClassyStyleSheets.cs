@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using ClassyHTML;
+using ClassyHTML.Attributes;
 
 namespace ClassyStyleSheets
 {
@@ -32,8 +33,10 @@ namespace ClassyStyleSheets
         }
 
         // Applies to HTML element with specified ID
-        public StyleSheet(HTML_ID id, Property[] properties)
+        public StyleSheet(ID id, Property[] properties)
         {
+            if (id.Value == null)
+                throw new Exception($"StyleSheet ID cannot be null.");
             Selector = id.Value;
             Properties = properties;
         }
@@ -110,7 +113,7 @@ namespace ClassyStyleSheets
         }
     }
 
-    public class Property
+    public abstract class Property
     {
         protected virtual string _Name { get; set; } = "property-name";
         public string Name { get { return _Name; } }
